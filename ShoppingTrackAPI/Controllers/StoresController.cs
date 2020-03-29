@@ -11,48 +11,48 @@ namespace ShoppingTrackAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class StoresController : ControllerBase
     {
         private readonly ShoppingTrackContext _context;
 
-        public ItemsController(ShoppingTrackContext context)
+        public StoresController(ShoppingTrackContext context)
         {
             _context = context;
         }
 
-        // GET: api/Items
+        // GET: api/Stores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Items>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Stores>>> GetStores()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Stores.ToListAsync();
         }
 
-        // GET: api/Items/5
+        // GET: api/Stores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Items>> GetItems(int id)
+        public async Task<ActionResult<Stores>> GetStores(int id)
         {
-            var items = await _context.Items.FindAsync(id);
+            var stores = await _context.Stores.FindAsync(id);
 
-            if (items == null)
+            if (stores == null)
             {
                 return NotFound();
             }
 
-            return items;
+            return stores;
         }
 
-        // PUT: api/Items/5
+        // PUT: api/Stores/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItems(int id, [FromBody]Items items)
+        public async Task<IActionResult> PutStores(int id, Stores stores)
         {
-            if (id != items.ItemId)
+            if (id != stores.StoreId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(items).State = EntityState.Modified;
+            _context.Entry(stores).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemsExists(id))
+                if (!StoresExists(id))
                 {
                     return NotFound();
                 }
@@ -73,42 +73,37 @@ namespace ShoppingTrackAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Items
+        // POST: api/Stores
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Items>> PostItems([FromBody]Items items)
+        public async Task<ActionResult<Stores>> PostStores(Stores stores)
         {
-            //take this out we check this in the front end
-            if(!_context.Items.Where(x=> x.Name == items.Name).Any())
-            {
-                Console.WriteLine();
-                _context.Items.Add(items);
-                await _context.SaveChangesAsync();
-            }
+            _context.Stores.Add(stores);
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItems", new { id = items.ItemId }, items);
+            return CreatedAtAction("GetStores", new { id = stores.StoreId }, stores);
         }
 
-        // DELETE: api/Items/5
+        // DELETE: api/Stores/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Items>> DeleteItems(int id)
+        public async Task<ActionResult<Stores>> DeleteStores(int id)
         {
-            var items = await _context.Items.FindAsync(id);
-            if (items == null)
+            var stores = await _context.Stores.FindAsync(id);
+            if (stores == null)
             {
                 return NotFound();
             }
 
-            _context.Items.Remove(items);
+            _context.Stores.Remove(stores);
             await _context.SaveChangesAsync();
 
-            return items;
+            return stores;
         }
 
-        private bool ItemsExists(int id)
+        private bool StoresExists(int id)
         {
-            return _context.Items.Any(e => e.ItemId == id);
+            return _context.Stores.Any(e => e.StoreId == id);
         }
     }
 }

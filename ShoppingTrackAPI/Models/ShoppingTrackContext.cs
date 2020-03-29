@@ -15,6 +15,7 @@ namespace ShoppingTrackAPI.Models
         {
         }
 
+        public virtual DbSet<Stores> Stores { get; set; }
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
         public virtual DbSet<Items> Items { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -29,6 +30,19 @@ namespace ShoppingTrackAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Stores>(entity =>
+            {
+                entity.HasKey(e => e.StoreId);
+
+                entity.Property(e => e.StoreId)
+                    .HasColumnName("StoreId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("Name")
+                    .HasColumnType("varchar(256)");
+            });
+
             modelBuilder.Entity<ErrorLog>(entity =>
             {
                 entity.Property(e => e.Id)
