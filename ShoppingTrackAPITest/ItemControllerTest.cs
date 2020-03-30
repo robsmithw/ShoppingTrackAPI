@@ -23,7 +23,7 @@ namespace ShoppingTrackAPITest
             itemToAdd.Previous_Price = (decimal)1.98;
             itemToAdd.Last_Store_Id = 1;
             var task = _controller.PostItems(itemToAdd);
-            task.Wait();
+            task.Wait(120000);
             _testItem = _controller.GetItems(newItemId).Result.Value;
             //var temp2 = temp.Result.Value;
             Assert.IsNotNull(_testItem);
