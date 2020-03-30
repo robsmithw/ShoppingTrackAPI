@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingTrackAPI", "ShoppingTrackAPI\ShoppingTrackAPI.csproj", "{04DBCD46-5478-4701-98DB-987EA75766C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingTrackAPI", "ShoppingTrackAPI\ShoppingTrackAPI.csproj", "{04DBCD46-5478-4701-98DB-987EA75766C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingTrackAPITest", "ShoppingTrackAPITest\ShoppingTrackAPITest.csproj", "{78AE4EAD-DA99-4E58-B2E8-EEB62B020420}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{04DBCD46-5478-4701-98DB-987EA75766C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04DBCD46-5478-4701-98DB-987EA75766C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04DBCD46-5478-4701-98DB-987EA75766C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78AE4EAD-DA99-4E58-B2E8-EEB62B020420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78AE4EAD-DA99-4E58-B2E8-EEB62B020420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78AE4EAD-DA99-4E58-B2E8-EEB62B020420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78AE4EAD-DA99-4E58-B2E8-EEB62B020420}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

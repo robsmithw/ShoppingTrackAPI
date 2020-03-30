@@ -2,6 +2,7 @@ image: mcr.microsoft.com/dotnet/core/sdk:latest
 
 stages:
   - build
+  - test
 
 before_script:
   - "dotnet restore"
@@ -11,3 +12,7 @@ build:
   script:
     - "dotnet build"
 
+test:
+  stage: test
+  script:
+    - "dotnet test"
