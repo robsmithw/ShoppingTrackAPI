@@ -13,7 +13,8 @@ namespace ShoppingTrackAPI.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly ShoppingTrackContext _context;
+        private static ShoppingTrackContext _context;
+        private ErrorLogsController _errorContext = new ErrorLogsController(_context);
 
         public ItemsController(ShoppingTrackContext context)
         {
@@ -22,8 +23,13 @@ namespace ShoppingTrackAPI.Controllers
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Items>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Items>>> GetItems(int? user_id = null)
         {
+            if (user_id.HasValue)
+            {
+                return await _context.Items.Where(x=>x.User_Id == user_id).ToListAsync();
+            }
+
             return await _context.Items.ToListAsync();
         }
 
@@ -80,11 +86,25 @@ namespace ShoppingTrackAPI.Controllers
         public async Task<ActionResult<Items>> PostItems([FromBody]Items items)
         {
             //take this out we check this in the front end
-            if(!_context.Items.Where(x=> x.Name == items.Name).Any())
+            try
             {
-                Console.WriteLine();
-                _context.Items.Add(items);
-                await _context.SaveChangesAsync();
+                if(items.ItemId == 0)
+                {
+                    items.ItemId = GetNextAvailableId();
+                }
+                if (!_context.Items.Where(x => x.Name == items.Name).Any())
+                {
+                    Console.WriteLine();
+                    _context.Items.Add(items);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch(Exception ex)
+            {
+                var error = new ErrorLog();
+                error.Location = nameof(this.PostItems);
+                error.CallStack = ex.StackTrace;
+                _errorContext.PostErrorLog(error);
             }
 
             return CreatedAtAction("GetItems", new { id = items.ItemId }, items);
@@ -109,6 +129,11 @@ namespace ShoppingTrackAPI.Controllers
         private bool ItemsExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);
+        }
+
+        public int GetNextAvailableId()
+        {
+            return _context.Items.OrderByDescending(x => x.ItemId).FirstOrDefault().ItemId + 1;
         }
     }
 }
