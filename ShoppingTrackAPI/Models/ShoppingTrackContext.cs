@@ -85,6 +85,16 @@ namespace ShoppingTrackAPI.Models
                     .IsRequired()
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Deleted)
+                    .IsRequired()
+                    .HasColumnName("deleted")
+                    .HasColumnType("bit(1)");
+
+                entity.Property(e => e.Purchased)
+                    .IsRequired()
+                    .HasColumnName("purchased")
+                    .HasColumnType("bit(1)");
             });
 
             modelBuilder.Entity<User>(entity =>

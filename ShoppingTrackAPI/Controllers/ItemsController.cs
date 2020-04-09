@@ -27,10 +27,10 @@ namespace ShoppingTrackAPI.Controllers
         {
             if (user_id.HasValue)
             {
-                return await _context.Items.Where(x=>x.User_Id == user_id).ToListAsync();
+                return await _context.Items.Where(x=>x.User_Id == user_id && !x.Deleted).ToListAsync();
             }
 
-            return await _context.Items.ToListAsync();
+            return await _context.Items.Where(x => !x.Deleted).ToListAsync();
         }
 
         // GET: api/Items/5
@@ -66,7 +66,7 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemsExists(id))
+                if (!ItemsExists(id, items.User_Id))
                 {
                     return NotFound();
                 }
@@ -92,10 +92,18 @@ namespace ShoppingTrackAPI.Controllers
                 {
                     items.ItemId = GetNextAvailableId();
                 }
-                if (!_context.Items.Where(x => x.Name == items.Name).Any())
+                //item doesnt exist for user
+                if (!_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id).Any())
                 {
-                    Console.WriteLine();
                     _context.Items.Add(items);
+                    await _context.SaveChangesAsync();
+                }
+                //item exist for user, but is deleted
+                if(_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id && x.Deleted).Any())
+                {
+                    var existingItem = await _context.Items.FindAsync(items.ItemId);
+                    existingItem.Deleted = false;
+                    _context.Items.Update(items);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -120,15 +128,16 @@ namespace ShoppingTrackAPI.Controllers
                 return NotFound();
             }
 
-            _context.Items.Remove(items);
+            items.Deleted = true;
+            _context.Items.Update(items);
             await _context.SaveChangesAsync();
 
             return items;
         }
 
-        private bool ItemsExists(int id)
+        private bool ItemsExists(int id, int user_id)
         {
-            return _context.Items.Any(e => e.ItemId == id);
+            return _context.Items.Any(e => e.ItemId == id && e.User_Id == user_id);
         }
 
         public int GetNextAvailableId()
