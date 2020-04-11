@@ -33,6 +33,7 @@ namespace ShoppingTrackAPITest
         public void GetAllItems()
         {
             var items = _controller.GetItems();
+            items.Wait();
             Assert.IsNotNull(items);
         }
 
