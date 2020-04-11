@@ -24,7 +24,7 @@ namespace ShoppingTrackAPI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1");
+                optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrack;password=Password1~;Connection Timeout=120");
             }
         }
 
