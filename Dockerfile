@@ -12,6 +12,5 @@ WORKDIR /ShoppingTrackAPI
 EXPOSE 80
 COPY --from=build-env ShoppingTrackAPI/out .
 RUN chmod +x ShoppingTrackAPI.dll
-RUN chmod +x ShoppingTrackAPI.exe
 
 ENTRYPOINT ["dotnet", "ShoppingTrackAPI.dll"]
