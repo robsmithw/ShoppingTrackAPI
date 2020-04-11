@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +31,7 @@ namespace ShoppingTrackAPI
             var userName = Configuration.GetValue<string>("Keys:UserId");
             var passwd = Configuration.GetValue<string>("Keys:Pass");
             var populatedConnString = String.Format(baseConnString, userName, passwd);
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddDbContext<ShoppingTrackContext>(options =>
                 options.UseMySql(populatedConnString));
         }

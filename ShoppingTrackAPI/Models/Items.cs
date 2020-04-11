@@ -10,5 +10,7 @@ namespace ShoppingTrackAPI.Models
         public string Name { get; set; }
         public decimal? Previous_Price { get; set; }
         public int? Last_Store_Id { get; set; }
+        public bool Deleted { get; set; }
+        public bool Purchased { get; set; }
     }
 }

@@ -13,7 +13,8 @@ namespace ShoppingTrackAPI.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly ShoppingTrackContext _context;
+        private static ShoppingTrackContext _context;
+        private ErrorLogsController _errorContext = new ErrorLogsController(_context);
 
         public ItemsController(ShoppingTrackContext context)
         {
@@ -22,9 +23,14 @@ namespace ShoppingTrackAPI.Controllers
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Items>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Items>>> GetItems(int? user_id = null)
         {
-            return await _context.Items.ToListAsync();
+            if (user_id.HasValue)
+            {
+                return await _context.Items.Where(x=>x.User_Id == user_id && !x.Deleted).ToListAsync();
+            }
+
+            return await _context.Items.Where(x => !x.Deleted).ToListAsync();
         }
 
         // GET: api/Items/5
@@ -45,7 +51,7 @@ namespace ShoppingTrackAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItems(int id, Items items)
+        public async Task<IActionResult> PutItems(int id, [FromBody]Items items)
         {
             if (id != items.ItemId)
             {
@@ -60,7 +66,7 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemsExists(id))
+                if (!ItemsExists(id, items.User_Id))
                 {
                     return NotFound();
                 }
@@ -80,11 +86,33 @@ namespace ShoppingTrackAPI.Controllers
         public async Task<ActionResult<Items>> PostItems([FromBody]Items items)
         {
             //take this out we check this in the front end
-            if(!_context.Items.Where(x=> x.Name == items.Name).Any())
+            try
             {
-                Console.WriteLine();
-                _context.Items.Add(items);
-                await _context.SaveChangesAsync();
+                if(items.ItemId == 0)
+                {
+                    items.ItemId = GetNextAvailableId();
+                }
+                //item doesnt exist for user
+                if (!_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id).Any())
+                {
+                    _context.Items.Add(items);
+                    await _context.SaveChangesAsync();
+                }
+                //item exist for user, but is deleted
+                if(_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id && x.Deleted).Any())
+                {
+                    var existingItem = await _context.Items.FindAsync(items.ItemId);
+                    existingItem.Deleted = false;
+                    _context.Items.Update(items);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch(Exception ex)
+            {
+                var error = new ErrorLog();
+                error.Location = nameof(this.PostItems);
+                error.CallStack = ex.StackTrace;
+                _errorContext.PostErrorLog(error);
             }
 
             return CreatedAtAction("GetItems", new { id = items.ItemId }, items);
@@ -100,15 +128,21 @@ namespace ShoppingTrackAPI.Controllers
                 return NotFound();
             }
 
-            _context.Items.Remove(items);
+            items.Deleted = true;
+            _context.Items.Update(items);
             await _context.SaveChangesAsync();
 
             return items;
         }
 
-        private bool ItemsExists(int id)
+        private bool ItemsExists(int id, int user_id)
         {
-            return _context.Items.Any(e => e.ItemId == id);
+            return _context.Items.Any(e => e.ItemId == id && e.User_Id == user_id);
+        }
+
+        public int GetNextAvailableId()
+        {
+            return _context.Items.OrderByDescending(x => x.ItemId).FirstOrDefault().ItemId + 1;
         }
     }
 }
