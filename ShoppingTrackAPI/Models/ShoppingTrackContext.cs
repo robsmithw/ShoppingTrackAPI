@@ -15,6 +15,7 @@ namespace ShoppingTrackAPI.Models
         {
         }
 
+        public virtual DbSet<Stores> Stores { get; set; }
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
         public virtual DbSet<Items> Items { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -23,12 +24,25 @@ namespace ShoppingTrackAPI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1");
+                optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrackAPI;password=Password2~;Connection Timeout=120");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Stores>(entity =>
+            {
+                entity.HasKey(e => e.StoreId);
+
+                entity.Property(e => e.StoreId)
+                    .HasColumnName("StoreId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("Name")
+                    .HasColumnType("varchar(256)");
+            });
+
             modelBuilder.Entity<ErrorLog>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -71,6 +85,16 @@ namespace ShoppingTrackAPI.Models
                     .IsRequired()
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Deleted)
+                    .IsRequired()
+                    .HasColumnName("deleted")
+                    .HasColumnType("bit(1)");
+
+                entity.Property(e => e.Purchased)
+                    .IsRequired()
+                    .HasColumnName("purchased")
+                    .HasColumnType("bit(1)");
             });
 
             modelBuilder.Entity<User>(entity =>
