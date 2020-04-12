@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace ShoppingTrackAPI.Models
 {
@@ -19,12 +20,17 @@ namespace ShoppingTrackAPI.Models
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
         public virtual DbSet<Items> Items { get; set; }
         public virtual DbSet<User> User { get; set; }
+        private IConfiguration Configuration { get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrackAPI;password=Password2~;Connection Timeout=120");
+                var baseConnString = Configuration.GetConnectionString("DefaultConnection");
+                var userName = Configuration.GetValue<string>("Keys:UserId");
+                var passwd = Configuration.GetValue<string>("Keys:Pass");
+                var populatedConnString = String.Format(baseConnString, userName, passwd);
+                optionsBuilder.UseMySql(populatedConnString);
             }
         }
 
