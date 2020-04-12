@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  # - test
   - deploy 
 
 build:
@@ -11,13 +11,13 @@ build:
   script:
     - "dotnet build"
 
-test:
-  stage: test
-  image: mcr.microsoft.com/dotnet/core/sdk:latest
-  before_script:
-    - "dotnet restore"
-  script:
-    - "dotnet test"
+# test:
+#   stage: test
+#   image: mcr.microsoft.com/dotnet/core/sdk:latest
+#   before_script:
+#     - "dotnet restore"
+#   script:
+#     - "dotnet test"
 
 deploy:
   stage: deploy
