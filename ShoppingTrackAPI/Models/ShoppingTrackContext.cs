@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace ShoppingTrackAPI.Models
 {
@@ -24,7 +25,13 @@ namespace ShoppingTrackAPI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+                #if DEBUG
+                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1;Connection Timeout=120");
+                #elif RELEASE
                 optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrackAPI;password=Password2~;Connection Timeout=120");
+                #else
+                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1;Connection Timeout=120");
+                #endif
             }
         }
 

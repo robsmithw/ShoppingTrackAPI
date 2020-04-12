@@ -34,7 +34,7 @@ namespace ShoppingTrackAPITest
         {
             var items = _controller.GetItems();
             items.Wait();
-            Assert.IsNotNull(items);
+            Assert.IsNotNull(items.Result.Value);
         }
 
         //[Test] this will need to be changed for soft delete

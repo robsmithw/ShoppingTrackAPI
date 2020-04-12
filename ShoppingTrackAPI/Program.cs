@@ -20,7 +20,13 @@ namespace ShoppingTrackAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    string environmentName;
+                    #if DEBUG
+                    environmentName = "Development";
+                    #elif RELEASE
+                    environmentName = "Production";
+                    #endif
+                    webBuilder.UseEnvironment(environmentName).UseStartup<Startup>();
                 });
     }
 }
