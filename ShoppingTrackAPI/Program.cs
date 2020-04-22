@@ -20,7 +20,7 @@ namespace ShoppingTrackAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    string environmentName;
+                    string environmentName = "Development";
                     #if DEBUG
                     environmentName = "Development";
                     #elif RELEASE
