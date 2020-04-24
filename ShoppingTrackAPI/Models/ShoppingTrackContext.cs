@@ -116,6 +116,22 @@ namespace ShoppingTrackAPI.Models
                 entity.Property(e => e.User_Id)
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasColumnType("varchar(256)");
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasColumnType("char(128)");
+
+                entity.Property(e => e.Admin)
+                    .HasColumnName("admin")
+                    .HasColumnType("bit(1)");
+
+                entity.Property(e => e.Validated)
+                    .HasColumnName("validated")
+                    .HasColumnType("bit(1)");
             });
 
             OnModelCreatingPartial(modelBuilder);
