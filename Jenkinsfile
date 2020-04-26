@@ -22,11 +22,13 @@ pipeline {
         // }
         stage('Build and Push Container') {
             steps{
-                def app
-                app = docker.build("robsmithw/shoppingtrackapi")
-                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub'){
-                    app.push("latest")
-                }
+                script{
+                    def app
+                    app = docker.build("robsmithw/shoppingtrackapi")
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub'){
+                        app.push("latest")
+                    }
+                }    
             }
         }
     }
