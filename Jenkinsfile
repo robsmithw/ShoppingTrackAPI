@@ -1,5 +1,8 @@
 pipeline {
+    def app
+
     agent none
+    
     stages {
         stage('Build') {
             agent {
@@ -19,5 +22,13 @@ pipeline {
         //         sh 'dotnet test'
         //     }
         // }
+        stage('Build Container') {
+            app = docker.build("robsmithw/shoppingtrackapi")
+        }
+        stage('Push Container') {
+            docker.withRegistry('https://registry.hub.docker.com', 'docker-hub'){
+                app.push("latest")
+            }
+        }
     }
 }
