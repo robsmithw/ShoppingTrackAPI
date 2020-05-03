@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace ShoppingTrackAPI.Controllers
         }
 
         [Route("Register")]
+        [EnableCors("AllowOrigin")]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<User>>> Register([FromBody]User user)
         {
@@ -70,6 +72,7 @@ namespace ShoppingTrackAPI.Controllers
         }
 
         [Route("Login")]
+        [EnableCors("AllowOrigin")]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<User>>> Login([FromBody]User user)
         {
