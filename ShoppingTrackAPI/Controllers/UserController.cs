@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShoppingTrackAPI.HelperFunctions;
 using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.Controllers
@@ -14,10 +17,83 @@ namespace ShoppingTrackAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly ShoppingTrackContext _context;
+        private readonly Helper _helper;
 
         public UserController(ShoppingTrackContext context)
         {
             _context = context;
+        }
+
+        [Route("Register")]
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<User>>> Register([FromBody]User user)
+        {
+            try
+            {
+                if(user.Email == null)
+                {
+                    return BadRequest("Email is required.");
+                }
+                var allUsers = await GetUser();
+                if(allUsers.Value.Where(x=>x.Email == user.Email).Any())
+                {
+                    return BadRequest("Email already in use.");
+                }
+                var retrieveUser = await GetUser(user.Username);
+                if (retrieveUser.Result == NotFound() || retrieveUser.Value == null)
+                {
+                    using (SHA512 shaM = new SHA512Managed())
+                    {
+                        var passwordInBytes = Encoding.UTF8.GetBytes(user.Password);
+                        var hash = shaM.ComputeHash(passwordInBytes);
+                        if(hash != null)
+                        {
+                            var hashPass = Encoding.Default.GetString(hash);
+                            user.Password = hashPass;
+                        }
+                        else
+                        {
+                            return BadRequest("Hash could not be generated.");
+                        }
+                    }
+                    _context.User.Add(user);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetUser", new { id = user.User_Id }, user);
+                }
+                return BadRequest("User Already exist.");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("Login")]
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<User>>> Login([FromBody]User user)
+        {
+            try
+            {
+                var retrieveUser = await GetUser(user.Username);
+                if(retrieveUser.Result == NotFound() || retrieveUser.Value == null)
+                {
+                    return NotFound();
+                }
+                if(Helper.SignIn(retrieveUser.Value, user))
+                {
+                    return CreatedAtAction("GetUser", new { username = retrieveUser.Value.Username }, retrieveUser.Value);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // GET: api/User
@@ -82,7 +158,7 @@ namespace ShoppingTrackAPI.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.User_Id }, user);
+            return CreatedAtAction("GetUser", new { username = user.Username }, user);
         }
 
         // DELETE: api/User/5
