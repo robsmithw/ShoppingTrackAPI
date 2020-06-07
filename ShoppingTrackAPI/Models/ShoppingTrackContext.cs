@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.Models
 {
@@ -48,6 +49,35 @@ namespace ShoppingTrackAPI.Models
                 entity.Property(e => e.Name)
                     .HasColumnName("Name")
                     .HasColumnType("varchar(256)");
+            });
+
+            modelBuilder.Entity<Prices>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ItemId)
+                    .HasColumnName("ItemId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("Price")
+                    .HasColumnType("decimal(10,2)");
+
+                entity.Property(e => e.StoreId)
+                    .HasColumnName("StoreId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateOfPrice)
+                    .HasColumnName("DateOfPrice")
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<ErrorLog>(entity =>
@@ -138,5 +168,7 @@ namespace ShoppingTrackAPI.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<ShoppingTrackAPI.Models.Prices> Prices { get; set; }
     }
 }
