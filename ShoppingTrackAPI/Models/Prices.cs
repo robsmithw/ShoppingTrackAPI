@@ -10,5 +10,6 @@ namespace ShoppingTrackAPI.Models
         public int UserId { get; set; }
         public decimal Price { get; set; }
         public int StoreId { get; set; }
+        public DateTime DateOfPrice { get; set; }
     }
 }

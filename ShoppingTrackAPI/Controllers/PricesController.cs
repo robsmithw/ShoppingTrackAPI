@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.Controllers
@@ -25,6 +26,25 @@ namespace ShoppingTrackAPI.Controllers
         public async Task<ActionResult<IEnumerable<Prices>>> GetPrices()
         {
             return await _context.Prices.ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("Estimate")]
+        public ActionResult<decimal> GetEstimate(int userId)
+        {
+            decimal estimate = 0;
+
+            //get all items that for user that are not purchased or deleted.
+            var purchasedItemIds = _context.Items.Where(item => item.User_Id == userId && !item.Purchased && !item.Deleted).Select(item => item.ItemId).ToList();
+            var prices = _context.Prices.Where(price => purchasedItemIds.Contains(price.ItemId)).ToList();
+            foreach(var price in prices)
+            {
+                estimate += price.Price;
+            }
+
+            var estimateJson = JsonConvert.SerializeObject(estimate);
+
+            return Ok(estimateJson);
         }
 
         // GET: api/Prices/5

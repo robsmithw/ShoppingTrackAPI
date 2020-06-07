@@ -74,6 +74,10 @@ namespace ShoppingTrackAPI.Models
                 entity.Property(e => e.StoreId)
                     .HasColumnName("StoreId")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateOfPrice)
+                    .HasColumnName("DateOfPrice")
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<ErrorLog>(entity =>
