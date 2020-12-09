@@ -132,7 +132,7 @@ namespace ShoppingTrackAPI.Controllers
             return _context.Prices.Any(e => e.Id == id);
         }
 
-        public int GetNextAvailableId()
+        private int GetNextAvailableId()
         {
             return _context.Prices.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
         }

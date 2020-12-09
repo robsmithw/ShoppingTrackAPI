@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ShoppingTrackAPI.HelperFunctions;
 using ShoppingTrackAPI.Models;
 
@@ -17,11 +18,14 @@ namespace ShoppingTrackAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly ShoppingTrackContext _context;
-        private readonly Helper _helper;
+        private readonly IHelper _helper;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(ShoppingTrackContext context)
+        public UserController(ShoppingTrackContext context, ILogger<UserController> logger, IHelper helper)
         {
             _context = context;
+            _logger = logger;
+            _helper = helper;
         }
 
         [Route("Register")]
@@ -30,6 +34,7 @@ namespace ShoppingTrackAPI.Controllers
         {
             try
             {
+                _logger.LogInformation("Starting Register function, request: {0}", user.Password);
                 if(user.Email == null)
                 {
                     return BadRequest("Email is required.");
@@ -42,20 +47,7 @@ namespace ShoppingTrackAPI.Controllers
                 var retrieveUser = await GetUser(user.Username);
                 if (retrieveUser.Result == NotFound() || retrieveUser.Value == null)
                 {
-                    using (SHA512 shaM = new SHA512Managed())
-                    {
-                        var passwordInBytes = Encoding.UTF8.GetBytes(user.Password);
-                        var hash = shaM.ComputeHash(passwordInBytes);
-                        if(hash != null)
-                        {
-                            var hashPass = Encoding.Default.GetString(hash);
-                            user.Password = hashPass;
-                        }
-                        else
-                        {
-                            return BadRequest("Hash could not be generated.");
-                        }
-                    }
+                    user.Password = _helper.CalculateHash(user.Password);
                     _context.User.Add(user);
                     await _context.SaveChangesAsync();
                     return CreatedAtAction("GetUser", new { id = user.User_Id }, user);
@@ -78,9 +70,9 @@ namespace ShoppingTrackAPI.Controllers
                 var retrieveUser = await GetUser(user.Username);
                 if(retrieveUser.Result == NotFound() || retrieveUser.Value == null)
                 {
-                    return NotFound();
+                    return NotFound("User Not Found");
                 }
-                if(Helper.SignIn(retrieveUser.Value, user))
+                if(_helper.SignIn(retrieveUser.Value, user))
                 {
                     return CreatedAtAction("GetUser", new { username = retrieveUser.Value.Username }, retrieveUser.Value);
                 }
@@ -92,7 +84,7 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
 
@@ -107,12 +99,14 @@ namespace ShoppingTrackAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<User>> GetUser(string username)
         {
-            var user = await _context.User.Where(x => x.Username == username).FirstOrDefaultAsync();
-
+            _logger.LogInformation("Attempting to find user with username: {username}", username);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.Username == username);
             if (user == null)
             {
+                _logger.LogInformation("User not found.");
                 return NotFound();
             }
+            _logger.LogInformation("User found.");
 
             return user;
         }
