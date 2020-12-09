@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: Password1
+      MYSQL_DATABASE: ShoppingTrack
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 60s
+      interval: 10s
+      retries: 5
+    volumes:
+      - /opt/ShoppingTrackAPI_data:/var/lib/mysql
+
+
+  api:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 80:80
+    links:
+      - db
+    # environment:
+    #   DB_HOST: mysql
+    #   DB_PORT: 3306

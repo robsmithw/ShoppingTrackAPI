@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ShoppingTrackAPI.Models;
+using ShoppingTrackAPI.HelperFunctions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace ShoppingTrackAPI
 {
@@ -31,7 +34,13 @@ namespace ShoppingTrackAPI
             var userName = Configuration.GetValue<string>("Keys:UserId");
             var passwd = Configuration.GetValue<string>("Keys:Pass");
             var populatedConnString = String.Format(baseConnString, userName, passwd);
+            services.AddMemoryCache();
             services.AddControllers().AddNewtonsoftJson();
+            services.AddSingleton<IHelper, Helper>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingTrackApi", Version = "v1" });
+            });
             services.AddDbContext<ShoppingTrackContext>(options =>
                 options.UseMySql(populatedConnString));
         }
@@ -42,6 +51,14 @@ namespace ShoppingTrackAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingTrackApi v1"));
+            }
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ShoppingTrackContext>();
+                context.Database.Migrate();
             }
 
             app.UseHttpsRedirection();
