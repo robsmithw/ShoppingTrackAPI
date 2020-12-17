@@ -61,8 +61,6 @@ namespace ShoppingTrackAPI
                 context.Database.Migrate();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();

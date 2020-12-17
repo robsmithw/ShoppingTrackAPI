@@ -110,6 +110,10 @@ namespace ShoppingTrackAPI.Models
                     .HasColumnName("last_store_id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.CurrentStoreId)
+                    .HasColumnName("currentStoreId")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasColumnType("varchar(250)");

@@ -27,6 +27,19 @@ namespace ShoppingTrackAPI.Controllers
             return await _context.Stores.ToListAsync();
         }
 
+        [HttpGet]
+        [Route(nameof(GetStoresWithItemsByUser))]
+        public async Task<ActionResult<IEnumerable<Stores>>> GetStoresWithItemsByUser(int userId)
+        {
+            List<Stores> stores = null;
+            var storesWithItemIds = await _context.Items.Where(x => x.User_Id == userId).Select(x => x.CurrentStoreId).Distinct().ToListAsync();
+            if (storesWithItemIds != null)
+            {
+                stores = await _context.Stores.Where(x => storesWithItemIds.Contains(x.StoreId)).ToListAsync();
+            }
+            return stores;
+        }
+
         // GET: api/Stores/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Stores>> GetStores(int id)
