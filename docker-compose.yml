@@ -21,6 +21,8 @@ services:
   api:
     build:
       context: .
+      args:
+        ASP_ENV: dev
     depends_on:
       db:
         condition: service_healthy
@@ -28,6 +30,3 @@ services:
       - 80:80
     links:
       - db
-    # environment:
-    #   DB_HOST: mysql
-    #   DB_PORT: 3306

@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using ShoppingTrackAPI.Models;
 using ShoppingTrackAPI.Controllers;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -10,8 +11,9 @@ namespace ShoppingTrackAPITest
     {
         const int newItemId = int.MaxValue;
         static ShoppingTrackContext _context = new ShoppingTrackContext();
+        static ILogger<ItemsController> logger;
         Items _testItem;
-        ItemsController _controller = new ItemsController(_context);
+        ItemsController _controller = new ItemsController(_context, logger);
 
         //[Test] this will need to be changed for soft delete
         //public void AddAndGetItems()
