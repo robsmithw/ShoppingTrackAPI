@@ -29,5 +29,3 @@ deploy:
   script:
     - docker build -t "$DOCKER_IMAGE" .
     - docker push "$DOCKER_IMAGE"
-  only:
-  - master
