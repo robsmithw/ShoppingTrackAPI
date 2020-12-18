@@ -5,7 +5,7 @@ stages:
 
 build:
   stage: build
-  image: mcr.microsoft.com/dotnet/core/sdk:latest
+  image: mcr.microsoft.com/dotnet/sdk:5.0
   before_script:
     - "dotnet restore"
   script:
@@ -13,7 +13,7 @@ build:
 
 # test:
 #   stage: test
-#   image: mcr.microsoft.com/dotnet/core/sdk:latest
+#   image: mcr.microsoft.com/dotnet/sdk:5.0
 #   before_script:
 #     - "dotnet restore"
 #   script:
