@@ -1,7 +1,8 @@
 stages:
   - build
   # - test
-  - deploy 
+  - deploy_dev
+  - deploy_prod
 
 build:
   stage: build
@@ -19,8 +20,20 @@ build:
 #   script:
 #     - "dotnet test"
 
-deploy:
-  stage: deploy
+deploy_dev:
+  stage: deploy_dev
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" $DOCKER
+    - docker build -t "$DOCKER_IMAGE" --build-arg ASP_ENV=dev .
+    - docker push "$DOCKER_IMAGE:beta"
+  only:
+    - dev
+
+deploy_prod:
+  stage: deploy_prod
   image: docker:latest
   services:
     - docker:dind
@@ -28,3 +41,5 @@ deploy:
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" $DOCKER
     - docker build -t "$DOCKER_IMAGE" .
     - docker push "$DOCKER_IMAGE"
+  only:
+    - master
