@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.Controllers
@@ -14,11 +15,12 @@ namespace ShoppingTrackAPI.Controllers
     public class ItemsController : ControllerBase
     {
         private static ShoppingTrackContext _context;
-        private ErrorLogsController _errorContext = new ErrorLogsController(_context);
+        private ILogger<ItemsController> _logger;
 
-        public ItemsController(ShoppingTrackContext context)
+        public ItemsController(ShoppingTrackContext context, ILogger<ItemsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Items
@@ -31,6 +33,13 @@ namespace ShoppingTrackAPI.Controllers
             }
 
             return await _context.Items.Where(x => !x.Deleted).ToListAsync();
+        }
+
+        [HttpGet]
+        [Route(nameof(GetItemsByStoreId))]
+        public async Task<ActionResult<IEnumerable<Items>>> GetItemsByStoreId(int storeId, int userId)
+        {
+            return await _context.Items.Where(x => x.CurrentStoreId == storeId && x.User_Id == userId && !x.Deleted).ToListAsync();;
         }
 
         // GET: api/Items/5
@@ -109,10 +118,11 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch(Exception ex)
             {
-                var error = new ErrorLog();
-                error.Location = nameof(this.PostItems);
-                error.CallStack = ex.StackTrace;
-                _errorContext.PostErrorLog(error);
+                _logger.LogInformation(ex.ToString());
+                // var error = new ErrorLog();
+                // error.Location = nameof(this.PostItems);
+                // error.CallStack = ex.StackTrace;
+                // await _errorContext.PostErrorLog(error);
             }
 
             return CreatedAtAction("GetItems", new { id = items.ItemId }, items);
@@ -140,9 +150,9 @@ namespace ShoppingTrackAPI.Controllers
             return _context.Items.Any(e => e.ItemId == id && e.User_Id == user_id);
         }
 
-        public int GetNextAvailableId()
-        {
-            return _context.Items.OrderByDescending(x => x.ItemId).FirstOrDefault().ItemId + 1;
-        }
+        private int GetNextAvailableId() =>
+            _context.Items.OrderByDescending(x => x.ItemId).FirstOrDefault() != null 
+            ? _context.Items.OrderByDescending(x => x.ItemId).FirstOrDefault().ItemId + 1 
+            : 1;
     }
 }

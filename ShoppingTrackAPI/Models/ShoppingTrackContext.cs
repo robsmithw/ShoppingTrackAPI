@@ -27,11 +27,11 @@ namespace ShoppingTrackAPI.Models
             if (!optionsBuilder.IsConfigured)
             {
                 #if DEBUG
-                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1;Connection Timeout=120");
+                optionsBuilder.UseMySql("server=db;port=3306;database=ShoppingTrack;user=root;password=Password1;CharSet=utf8");
                 #elif RELEASE
-                optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrackAPI;password=Password2~;Connection Timeout=120");
+                optionsBuilder.UseMySql("server=45.79.198.133;port=3306;database=ShoppingTrack;user=ShoppingTrackAPI;password=Password2~");
                 #else
-                optionsBuilder.UseMySql("server=192.168.1.226;port=3306;database=ShoppingTrack;user=root;password=Password1;Connection Timeout=120");
+                optionsBuilder.UseMySql("server=db;port=3306;database=ShoppingTrack;user=root;password=Password1;CharSet=utf8");
                 #endif
             }
         }
@@ -108,6 +108,10 @@ namespace ShoppingTrackAPI.Models
 
                 entity.Property(e => e.Last_Store_Id)
                     .HasColumnName("last_store_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CurrentStoreId)
+                    .HasColumnName("currentStoreId")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Name)
