@@ -85,7 +85,7 @@ namespace ShoppingTrackAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetItems", new { id = items.ItemId }, items);
         }
 
         // POST: api/Items
@@ -101,18 +101,22 @@ namespace ShoppingTrackAPI.Controllers
                 {
                     items.ItemId = GetNextAvailableId();
                 }
+                var item = await _context.Items.FirstOrDefaultAsync(x => x.Name == items.Name && x.User_Id == items.User_Id);
                 //item doesnt exist for user
-                if (!_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id).Any())
+                if (item == null)
                 {
                     _context.Items.Add(items);
                     await _context.SaveChangesAsync();
                 }
-                //item exist for user, but is deleted
-                if(_context.Items.Where(x => x.Name == items.Name && x.User_Id == items.User_Id && x.Deleted).Any())
+                //item exist for user and is NOT deleted (bad request)
+                if(item != null && !item.Deleted)
                 {
-                    var existingItem = await _context.Items.FindAsync(items.ItemId);
-                    existingItem.Deleted = false;
-                    _context.Items.Update(items);
+                    return BadRequest("The item already exist for this user and cannot be added twice.");
+                }
+                //item exist for user, but is deleted
+                if(item != null && item.Deleted)
+                {
+                    item.Deleted = false;
                     await _context.SaveChangesAsync();
                 }
             }

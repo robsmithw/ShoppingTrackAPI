@@ -8,10 +8,6 @@ namespace ShoppingTrackAPI.Models
 {
     public partial class ShoppingTrackContext : DbContext
     {
-        public ShoppingTrackContext()
-        {
-        }
-
         public ShoppingTrackContext(DbContextOptions<ShoppingTrackContext> options)
             : base(options)
         {

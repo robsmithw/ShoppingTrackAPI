@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,20 +21,18 @@ namespace ShoppingTrackAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var baseConnString = Configuration.GetConnectionString("DefaultConnection");
-            var userName = Configuration.GetValue<string>("Keys:UserId");
-            var passwd = Configuration.GetValue<string>("Keys:Pass");
-            var populatedConnString = String.Format(baseConnString, userName, passwd);
             services.AddMemoryCache();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IHelper, Helper>();
@@ -41,8 +40,37 @@ namespace ShoppingTrackAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingTrackApi", Version = "v1" });
             });
-            services.AddDbContext<ShoppingTrackContext>(options =>
-                options.UseMySql(populatedConnString));
+            // services.AddDbContext<ShoppingTrackContext>(options =>
+            //     options.UseMySql(populatedConnString));
+
+            services.AddDbContextPool<ShoppingTrackContext>((srv, builder) =>
+            {
+                if (HostingEnvironment.IsDevelopment())
+                {
+                    builder.EnableDetailedErrors();
+                    builder.EnableSensitiveDataLogging();
+                }
+                var conn = HostingEnvironment.IsDevelopment()
+                    ? Configuration["ConnectionString"]
+                    : GetConnectionString();
+
+                builder.UseMySql(conn, options =>
+                {
+                    options.ServerVersion(new Version(5, 7, 32), ServerType.MySql);
+                });
+            });
+
+        }
+
+        public string GetConnectionString()
+        {
+            var baseConnString = Configuration.GetConnectionString("DefaultConnection");
+            var userName = Configuration.GetValue<string>("Keys:UserId");
+            var passwd = Configuration.GetValue<string>("Keys:Pass");
+            var populatedConnString = !String.IsNullOrEmpty(baseConnString) && !String.IsNullOrEmpty(userName) && !String.IsNullOrEmpty(passwd) 
+                ? String.Format(baseConnString, userName, passwd)
+                : String.Empty;
+            return populatedConnString;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
