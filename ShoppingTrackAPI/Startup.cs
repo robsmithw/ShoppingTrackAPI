@@ -40,8 +40,8 @@ namespace ShoppingTrackAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingTrackApi", Version = "v1" });
             });
-            // services.AddDbContext<ShoppingTrackContext>(options =>
-            //     options.UseMySql(populatedConnString));
+            //  services.AddDbContext<ShoppingTrackContext>(options =>
+            //      options.UseMySql(populatedConnString));
 
             services.AddDbContextPool<ShoppingTrackContext>((srv, builder) =>
             {
@@ -50,7 +50,7 @@ namespace ShoppingTrackAPI
                     builder.EnableDetailedErrors();
                     builder.EnableSensitiveDataLogging();
                 }
-                var conn = HostingEnvironment.IsDevelopment()
+                var conn = HostingEnvironment.EnvironmentName == "UnitTesting"
                     ? Configuration["ConnectionString"]
                     : GetConnectionString();
 

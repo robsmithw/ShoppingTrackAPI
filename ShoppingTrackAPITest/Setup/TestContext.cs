@@ -46,7 +46,7 @@ namespace ShoppingTrackAPITest.Setup
             await CleanContainersAsync();
             await StartContainerAsync();
             await MigrateDatabaseAsync();
-            await SetupClientAsync();
+            SetupClientAsync();
         }
 
         public async Task DisposeAsync()
@@ -62,7 +62,7 @@ namespace ShoppingTrackAPITest.Setup
             }
         }
 
-        private async Task SetupClientAsync()
+        private void SetupClientAsync()
         {
             var appSettingOverrides = new Dictionary<string, string>()
             {
@@ -71,7 +71,7 @@ namespace ShoppingTrackAPITest.Setup
             };
 
             _server = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development")
+                .UseEnvironment("UnitTesting")
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     config.AddInMemoryCollection(appSettingOverrides);
                 })

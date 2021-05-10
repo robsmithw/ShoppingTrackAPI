@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - deploy 
+  - push-image
 
 build:
   stage: build
@@ -15,20 +15,21 @@ test:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:5.0
   services:
-    - docker:dind
+    - docker:18.09.7-dind
   before_script:
     - "dotnet restore"
   script:
     - "dotnet test"
 
-deploy:
-  stage: deploy
+push-image:
+  stage: push-image
   image: docker:latest
   services:
-    - docker:dind
+    - docker:18.09.7-dind
   script:
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" $DOCKER
+    - echo -n $DOCKER_PASS | docker login --username $DOCKER_USER --password-stdin $DOCKER
     - docker build -t "$DOCKER_IMAGE" .
     - docker push "$DOCKER_IMAGE"
   only:
+    - dev
     - master

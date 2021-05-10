@@ -7,5 +7,6 @@ namespace ShoppingTrackAPI.Models
     {
         public int StoreId { get; set; }
         public string Name { get; set; }
+        public string PictureFileName { get; set; }
     }
 }

@@ -16,22 +16,25 @@ namespace ShoppingTrackAPI
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            string environmentName = "Development";
+            #if DEBUG
+            environmentName = "Development";
+            #elif RELEASE
+            environmentName = "Production";
+            #endif
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
                 })
+                .UseEnvironment(environmentName)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    string environmentName = "Development";
-                    #if DEBUG
-                    environmentName = "Development";
-                    #elif RELEASE
-                    environmentName = "Production";
-                    #endif
                     webBuilder.UseEnvironment(environmentName).UseStartup<Startup>();
                 });
+        }
     }
 }

@@ -45,6 +45,10 @@ namespace ShoppingTrackAPI.Models
                 entity.Property(e => e.Name)
                     .HasColumnName("Name")
                     .HasColumnType("varchar(256)");
+
+                entity.Property(e => e.PictureFileName)
+                    .HasColumnName("PictureFileName")
+                    .HasColumnType("varchar(50)");
             });
 
             modelBuilder.Entity<Prices>(entity =>
