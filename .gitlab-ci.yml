@@ -18,7 +18,7 @@ test:
     - docker:18.09.7-dind
   script:
     - chmod +x scripts/build.sh
-    - docker run --network="host" -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd) mcr.microsoft.com/dotnet/sdk:5.0 ./builds/scripts/build.sh
+    - docker run --network="host" -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd) mcr.microsoft.com/dotnet/sdk:5.0 ls & ./builds/scripts/build.sh
   artifacts:
     when: always
 
