@@ -1,4 +1,5 @@
 #!/bin/sh
 
-dotnet restore
-dotnet test --no-restore /p:CollectCoverage=true
+dotnet restore app/ShoppingTrackAPI
+dotnet restore app/ShoppingTrackAPITest
+dotnet test app/ShoppingTrackAPITest --no-restore /p:CollectCoverage=true
