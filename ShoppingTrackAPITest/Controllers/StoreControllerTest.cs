@@ -41,7 +41,7 @@ namespace ShoppingTrackAPITest
             // Ensure the itemId that is created is greater than 0
             Assert.InRange(storeCreated.StoreId, 1, int.MaxValue);
             var storeFromDatabase = await _testContext.DbContext.Stores.FirstOrDefaultAsync(i => i.StoreId == storeCreated.StoreId);
-            Assert.Null(storeFromDatabase);
+            Assert.NotNull(storeFromDatabase);
             Assert.Equal(storeCreated.Name, storeFromDatabase.Name);
         }
 
