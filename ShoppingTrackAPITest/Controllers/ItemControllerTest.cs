@@ -38,7 +38,6 @@ namespace ShoppingTrackAPITest
             var itemCreated = JsonSerializer.Deserialize<Items>(addItemJsonString);
             Assert.NotNull(itemCreated);
             Assert.Equal(itemName, itemCreated.Name);
-            Assert.NotNull(itemCreated.ItemId);
             // Ensure the itemId that is created is greater than 0
             Assert.InRange(itemCreated.ItemId, 1, int.MaxValue);
             var itemFromDatabase = await _testContext.DbContext.Items.FirstOrDefaultAsync(i => i.ItemId == itemCreated.ItemId);
@@ -144,21 +143,5 @@ namespace ShoppingTrackAPITest
                 Last_Store_Id = 1,
                 CurrentStoreId = 1
             };
-
-        //[Test] this will need to be changed for soft delete
-        //public void DeleteItems()
-        //{
-        //    if(_testItem != null)
-        //    {
-        //        var task = _controller.DeleteItems(newItemId);
-        //        task.Wait();
-        //        var item = _controller.GetItems(newItemId).Result.Value;
-        //        Assert.IsNull(item);
-        //    }
-        //    else
-        //    {
-        //        Assert.Fail("Item should not be null, please check if Add test failed.");
-        //    }
-        //}
     }
 }

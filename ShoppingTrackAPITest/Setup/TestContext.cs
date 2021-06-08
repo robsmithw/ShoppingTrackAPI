@@ -46,7 +46,7 @@ namespace ShoppingTrackAPITest.Setup
             await CleanContainersAsync();
             await StartContainerAsync();
             await MigrateDatabaseAsync();
-            await SetupClientAsync();
+            SetupClientAsync();
         }
 
         public async Task DisposeAsync()
@@ -62,11 +62,11 @@ namespace ShoppingTrackAPITest.Setup
             }
         }
 
-        private async Task SetupClientAsync()
+        private void SetupClientAsync()
         {
             var appSettingOverrides = new Dictionary<string, string>()
             {
-               {  "ConnectionString", ConnectionString },
+                { "ConnectionStrings:DefaultConnection", ConnectionString },
                 { "IntegrationTesting", "true" }
             };
 
