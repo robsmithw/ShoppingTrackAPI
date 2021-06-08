@@ -71,7 +71,7 @@ namespace ShoppingTrackAPITest.Setup
             };
 
             _server = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development")
+                .UseEnvironment("UnitTesting")
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     config.AddInMemoryCollection(appSettingOverrides);
                 })

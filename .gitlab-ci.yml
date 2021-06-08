@@ -1,8 +1,7 @@
 stages:
   - build
   - test
-  - push-image 
-  - deploy-production
+  - push-image
 
 build:
   stage: build
@@ -12,30 +11,26 @@ build:
   script:
     - "dotnet build"
 
-# test:
-#   stage: test
-#   image: mcr.microsoft.com/dotnet/sdk:5.0
-#   services:
-#     - docker:dind
-#   before_script:
-#     - "dotnet restore"
-#   script:
-#     - "dotnet test"
+test:
+  stage: test
+  image: docker:19.03.8-git
+  services:
+    - docker:18.09.7-dind
+  script:
+    - chmod +x scripts/build.sh
+    - docker run --network="host" -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/app mcr.microsoft.com/dotnet/sdk:5.0 ./app/scripts/build.sh
+  artifacts:
+    when: always
 
 push-image:
   stage: push-image
   image: docker:latest
   services:
-    - docker:dind
+    - docker:18.09.7-dind
   script:
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" $DOCKER
+    - echo -n $DOCKER_PASS | docker login --username $DOCKER_USER --password-stdin $DOCKER
     - docker build -t "$DOCKER_IMAGE" .
     - docker push "$DOCKER_IMAGE"
   only:
     - dev
     - master
-
-deploy-production:
-  stage: deploy-production
-  script:
-    - ssh -o StrictHostKeyChecking=no root@45.79.198.133 "/bin/python3 ./deploy_app.py"
