@@ -49,6 +49,111 @@ namespace ShoppingTrackAPI.Models
                 entity.Property(e => e.PictureFileName)
                     .HasColumnName("PictureFileName")
                     .HasColumnType("varchar(50)");
+
+                entity.HasData(
+                    new Stores
+                    {
+                        StoreId = 1,
+                        Name = "Kroger",
+                        PictureFileName = String.Empty 
+                    },
+                    new Stores
+                    {
+                        StoreId = 2,
+                        Name = "Publix",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 3,
+                        Name = "Amazon",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 4,
+                        Name = "Whole Foods",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 5,
+                        Name = "Trader Joes",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 6,
+                        Name = "Walmart",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 7,
+                        Name = "Dollar General",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 8,
+                        Name = "Pick n Save",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 9,
+                        Name = "Giant Eagle",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 10,
+                        Name = "Schnucks",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 11,
+                        Name = "H-E-B",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 12,
+                        Name = "Food Lion",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 13,
+                        Name = "Costco",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 14,
+                        Name = "Sams Club",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 15,
+                        Name = "ALDI",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 16,
+                        Name = "Save A Lot",
+                        PictureFileName = String.Empty
+                    },
+                    new Stores
+                    {
+                        StoreId = 17,
+                        Name = "Orbit Health",
+                        PictureFileName = String.Empty
+                    }
+                );
             });
 
             modelBuilder.Entity<Prices>(entity =>

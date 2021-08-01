@@ -1,17 +1,15 @@
-﻿using ShoppingTrackAPI.Models;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text;
-using System;
-using ShoppingTrackAPI.Controllers;
-using Microsoft.Extensions.Logging;
-using Xunit;
 using System.Net;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+
+using Xunit;
+
+using Microsoft.EntityFrameworkCore;
+
+using ShoppingTrackAPI.Models;
 using ShoppingTrackAPITest.Setup;
 
 namespace ShoppingTrackAPITest
@@ -53,6 +51,7 @@ namespace ShoppingTrackAPITest
             var jsonString = await response.Content.ReadAsStringAsync();
             var storesRetrieved = JsonSerializer.Deserialize<List<Stores>>(jsonString);
             Assert.NotNull(storesRetrieved);
+            Assert.InRange(storesRetrieved.Count, 17, int.MaxValue);
         }
 
         private Stores GetDefaultStore(string name) =>
