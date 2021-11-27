@@ -41,7 +41,7 @@ namespace ShoppingTrackAPI.Controllers
         {
             try
             {
-                _logger.LogInformation("Starting Register function, request: {0}", user.Password);
+                _logger.LogInformation("Starting Register function, request: {0}", user);
                 var appClientId = _config.GetValue<string>("AWS:AppClientId");
                 var userPoolId = _config.GetValue<string>("AWS:UserPoolId");
                 var emailAttribute = new AttributeType()
@@ -49,9 +49,12 @@ namespace ShoppingTrackAPI.Controllers
                     Name = "email",
                     Value = user.Email
                 };
+
+                //create user in cognito
                 await _cognitoUserManagement.AdminCreateUserAsync(user.Username, user.Password, userPoolId, appClientId,
                     new List<AttributeType>(){ emailAttribute });
                 return Ok(user);
+                
                 // if(user.Email == null)
                 // {
                 //     return BadRequest("Email is required.");
@@ -74,7 +77,7 @@ namespace ShoppingTrackAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return BadRequest(ex.Message.ToString());
             }
         }
 

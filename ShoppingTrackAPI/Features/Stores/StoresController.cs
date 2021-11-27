@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingTrackAPI.Models;
+using MediatR;
+using System.Threading;
 
 namespace ShoppingTrackAPI.Controllers
 {
@@ -16,17 +18,23 @@ namespace ShoppingTrackAPI.Controllers
     public class StoresController : ControllerBase
     {
         private readonly ShoppingTrackContext _context;
+        private readonly IMediator _mediator;
 
-        public StoresController(ShoppingTrackContext context)
+        public StoresController(ShoppingTrackContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Stores
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Stores>>> GetStores()
         {
-            return await _context.Stores.ToListAsync();
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(3000);
+            var cancellationToken = cancellationTokenSource.Token;
+            var response = await _mediator.Send(new GetStores.Query(), cancellationToken);
+            return Ok(response);
         }
 
         [HttpGet]
@@ -92,12 +100,13 @@ namespace ShoppingTrackAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Stores>> PostStores(Stores stores)
+        public async Task<ActionResult<Stores>> PostStores(Stores store)
         {
-            _context.Stores.Add(stores);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetStores", new { id = stores.StoreId }, stores);
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(3000);
+            var cancellationToken = cancellationTokenSource.Token;
+            var response = await _mediator.Send(new AddStore.Command(store), cancellationToken);
+            return Ok(response);
         }
 
         // DELETE: api/Stores/5

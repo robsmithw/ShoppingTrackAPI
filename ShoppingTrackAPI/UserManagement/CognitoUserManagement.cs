@@ -99,9 +99,8 @@ public class CognitoUserManagement : ICognitoUserManagement
             Session = adminInitiateAuthResponse.Session
         };
 
-        AdminRespondToAuthChallengeResponse adminRespondToAuthChallengeResponse = adminAmazonCognitoIdentityProviderClient
-            .AdminRespondToAuthChallengeAsync(adminRespondToAuthChallengeRequest)
-            .Result;
+        AdminRespondToAuthChallengeResponse adminRespondToAuthChallengeResponse = await adminAmazonCognitoIdentityProviderClient
+            .AdminRespondToAuthChallengeAsync(adminRespondToAuthChallengeRequest);
     }
 
     public async Task AdminAddUserToGroupAsync(

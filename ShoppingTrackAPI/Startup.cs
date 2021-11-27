@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MediatR;
 
 namespace ShoppingTrackAPI
 {
@@ -55,6 +56,7 @@ namespace ShoppingTrackAPI
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IHelper, Helper>();
             services.AddSingleton<ICognitoUserManagement, CognitoUserManagement>();
+            services.AddMediatR(typeof(Startup).Assembly);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingTrackApi", Version = "v1" });
