@@ -44,36 +44,39 @@ namespace ShoppingTrackAPI.Controllers
                 _logger.LogInformation("Starting Register function, request: {0}", user);
                 var appClientId = _config.GetValue<string>("AWS:AppClientId");
                 var userPoolId = _config.GetValue<string>("AWS:UserPoolId");
+                
+                if(user.Email == null)
+                {
+                    return BadRequest("Email is required.");
+                }
+                
                 var emailAttribute = new AttributeType()
                 {
                     Name = "email",
                     Value = user.Email
                 };
 
+                var allUsers = await GetUser();
+                if(allUsers.Value.Where(x=>x.Email == user.Email).Any())
+                {
+                    return BadRequest("Email already in use.");
+                }
+
                 //create user in cognito
                 await _cognitoUserManagement.AdminCreateUserAsync(user.Username, user.Password, userPoolId, appClientId,
                     new List<AttributeType>(){ emailAttribute });
-                return Ok(user);
                 
-                // if(user.Email == null)
-                // {
-                //     return BadRequest("Email is required.");
-                // }
-                // var allUsers = await GetUser();
-                // if(allUsers.Value.Where(x=>x.Email == user.Email).Any())
-                // {
-                //     return BadRequest("Email already in use.");
-                // }
-                // var retrieveUser = await GetUser(user.Username);
-                // if (retrieveUser.Result == NotFound() || retrieveUser.Value == null)
-                // {
-                //     user.Password = _helper.CalculateHash(user.Password);
-                //     _context.User.Add(user);
-                //     await _context.SaveChangesAsync();
-                //     return CreatedAtAction("GetUser", new { id = user.User_Id }, user);
-                // }
-                // return BadRequest("User Already exist.");
+                var retrieveUser = await GetUser(user.Username);
+                if (retrieveUser.Result == NotFound() || retrieveUser.Value == null)
+                {
+                    //remove password, cognito will take care of that for us, so we don't store this
+                    user.Password = string.Empty;
+                    user.User_Id = await GetNextAvailableId();
+                    await _context.User.AddAsync(user);
+                    await _context.SaveChangesAsync();
+                }
 
+                return Ok(user);
             }
             catch (Exception ex)
             {
@@ -83,32 +86,33 @@ namespace ShoppingTrackAPI.Controllers
 
         [Route("Login")]
         [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody]User user)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody]User user)
         {
             try
             {
                 var appClientId = _config.GetValue<string>("AWS:AppClientId");
                 var userPoolId = _config.GetValue<string>("AWS:UserPoolId");
-                var authResponse = await _cognitoUserManagement.AdminAuthenticateUserAsync(user.Username, user.Password, userPoolId, appClientId);
-                if (authResponse.AuthenticationResult == null){
-                    throw new Exception("No Authentication result.");
+                //find user in our user table for userId
+                var retrievedUser = await _context.User
+                    .FirstOrDefaultAsync(x => x.Username == user.Username);
+                if(retrievedUser is null)
+                {
+                    return NotFound("User Not Found");
                 }
-                _logger.LogInformation("Authentication Result: {@result}", authResponse.AuthenticationResult);
-                return Ok(authResponse.AuthenticationResult);
-                // var retrieveUser = await GetUser(user.Username);
-                // if(retrieveUser.Result == NotFound() || retrieveUser.Value == null)
-                // {
-                //     return NotFound("User Not Found");
-                // }
-                // if(_helper.SignIn(retrieveUser.Value, user))
-                // {
-                //     return CreatedAtAction("GetUser", new { username = retrieveUser.Value.Username }, retrieveUser.Value);
-                // }
-                // else
-                // {
-                //     return NotFound();
-                // }
 
+                var loginResponse = new LoginResponse()
+                {
+                    UserId = retrievedUser.User_Id
+                };
+
+                var authResponse = await _cognitoUserManagement.AdminAuthenticateUserAsync(user.Username, user.Password, userPoolId, appClientId);
+                if (authResponse.AuthenticationResult == null)
+                    throw new Exception("No Authentication result.");
+                    
+                _logger.LogInformation("Authentication Result: {@result}", authResponse.AuthenticationResult);
+                loginResponse.AccessToken = authResponse.AuthenticationResult.AccessToken;
+                
+                return Ok(loginResponse);
             }
             catch(Exception ex)
             {
@@ -202,6 +206,11 @@ namespace ShoppingTrackAPI.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.User_Id == id);
+        }
+
+        private async Task<int> GetNextAvailableId()
+        {
+            return await _context.User.OrderByDescending(x => x.User_Id).Select(x => x.User_Id).FirstOrDefaultAsync() + 1;
         }
     }
 }
