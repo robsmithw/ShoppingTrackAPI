@@ -5,8 +5,10 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/dotnet/sdk:5.0
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with: 
+          dotnet-version: '5.0.x'
       - run: dotnet restore
       - run: dotnet build
