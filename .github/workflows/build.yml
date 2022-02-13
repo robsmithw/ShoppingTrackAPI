@@ -5,6 +5,7 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/sdk:5.0
     steps:
       - run: dotnet restore
       - run: dotnet build
