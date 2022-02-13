@@ -12,3 +12,10 @@ jobs:
           dotnet-version: '5.0.x'
       - run: dotnet restore
       - run: dotnet build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: chmod +x scripts/build.sh
+      - run: docker run --network="host" -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/app mcr.microsoft.com/dotnet/sdk:5.0 ./app/scripts/build.sh
