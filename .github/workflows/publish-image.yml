@@ -1,0 +1,19 @@
+name: Publish Image (CD)
+
+on: 
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  publish-image:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - run: echo -n $DOCKER_PASS | docker login --username $DOCKER_USER --password-stdin $DOCKER
+      - run: docker build -t "$DOCKER_IMAGE" .
+      - run: docker push "$DOCKER_IMAGE"
