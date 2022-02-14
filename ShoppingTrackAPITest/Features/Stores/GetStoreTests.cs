@@ -31,12 +31,11 @@ namespace ShoppingTrackAPITest.Features.Stores
             var query = new GetStores.Query();
 
             //Act
-            var response = _handler.Handle(query, CancellationToken.None);
+            var response = await _handler.Handle(query, CancellationToken.None);
             
             //Assert
-            var stores = await _testContext.DbContext.Stores.ToListAsync(CancellationToken.None);
-            Assert.NotNull(stores);
-            Assert.InRange(stores.Count, 17, int.MaxValue);
+            Assert.NotNull(response);
+            Assert.InRange(response.Count, 17, int.MaxValue);
         }
     }
 }
