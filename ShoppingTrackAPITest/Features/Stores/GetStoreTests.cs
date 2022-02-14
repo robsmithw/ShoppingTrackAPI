@@ -21,7 +21,7 @@ namespace ShoppingTrackAPITest.Features.Stores
         public GetStoresTest(TestContext context, ILogger<GetStores> logger)
         {
             _testContext = context;
-            _handler = new GetStores.Handler(_testContext.DbContext, logger);
+            _handler = new GetStores.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<GetStores>());
         }
 
         [Fact]
