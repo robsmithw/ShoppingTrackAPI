@@ -18,7 +18,7 @@ namespace ShoppingTrackAPITest.Features.Stores
         private readonly TestContext _testContext;
         private readonly Handler _handler;
 
-        public GetStoresTest(TestContext context, ILogger<GetStores> logger)
+        public GetStoresTest(TestContext context)
         {
             _testContext = context;
             _handler = new GetStores.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<GetStores>());

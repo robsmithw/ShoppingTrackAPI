@@ -27,6 +27,5 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      - run: cd ShoppingTrackAPIUnitTest
-      - run: dotnet restore
-      - run: dotnet test
+      - run: dotnet restore ShoppingTrackAPIUnitTest
+      - run: dotnet test ShoppingTrackAPIUnitTest
