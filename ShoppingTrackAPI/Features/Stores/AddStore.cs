@@ -25,9 +25,9 @@ namespace ShoppingTrackAPI.Controllers
         public class Handler : IRequestHandler<Command, Unit>
         {
             private readonly ShoppingTrackContext _context;
-            private readonly ILogger<GetStores> _logger;
+            private readonly ILogger<AddStore> _logger;
 
-            public Handler(ShoppingTrackContext context, ILogger<GetStores> logger)
+            public Handler(ShoppingTrackContext context, ILogger<AddStore> logger)
             {
                 _context = context;
                 _logger = logger;

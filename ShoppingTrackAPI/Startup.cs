@@ -88,8 +88,6 @@ namespace ShoppingTrackAPI
                 }
                 var conn = Configuration.GetConnectionString("DefaultConnection");
 
-                Console.WriteLine("Connection string: {0}", conn);
-
                 builder.UseMySql(conn, options =>
                 {
                     options.ServerVersion(new Version(5, 7, 32), ServerType.MySql);

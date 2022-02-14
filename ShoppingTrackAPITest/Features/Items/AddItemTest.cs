@@ -17,16 +17,16 @@ using ShoppingTrackAPITest.Setup;
 namespace ShoppingTrackAPITest
 {
     [Collection("api")]
-    public class ItemControllerTest
+    public class AddItemTest
     {
         private readonly TestContext _testContext;
 
-        public ItemControllerTest(TestContext context)
+        public AddItemTest(TestContext context)
         {
             _testContext = context;
         }
 
-        [Fact]
+        [Fact(Skip = "Add Item not converted to command yet.")]
         public async Task AddItemWithoutItemId_ReturnsCreatedItem()
         {
             const string itemName = "testItem";
@@ -45,7 +45,7 @@ namespace ShoppingTrackAPITest
             Assert.Equal(itemCreated.Name, itemFromDatabase.Name);
         }
 
-        [Fact]
+        [Fact(Skip = "Add Item not converted to command yet.")]
         public async Task AddItemWithItemId_ReturnsCreatedItem()
         {
             const string itemName = "secondTest";
@@ -61,7 +61,7 @@ namespace ShoppingTrackAPITest
             Assert.Equal(2, itemCreated.ItemId);
         }
 
-        [Fact]
+        [Fact(Skip = "Add Item not converted to command yet.")]
         public async Task AddItemThatExistAndNotDeleted_ReturnsBadRequest()
         {
             var itemFromDatabase = await _testContext.DbContext.Items.FirstOrDefaultAsync(i => i.ItemId == 2);
@@ -89,7 +89,7 @@ namespace ShoppingTrackAPITest
         }
 
         //item exist for user, but is deleted
-        [Fact]
+        [Fact(Skip = "Add Item not converted to command yet.")]
         public async Task AddItemThatExistAndDeleted_ReturnsCreatedAndMarksAsActive()
         {
             var itemFromDatabase = await _testContext.DbContext.Items.FirstOrDefaultAsync(i => i.ItemId == 2);
@@ -122,16 +122,6 @@ namespace ShoppingTrackAPITest
                 Console.WriteLine(itemAfterRequest.Name);
                 Assert.True(!itemAfterRequest.Deleted);
             }
-        }
-
-        [Fact]
-        public async Task GetItems_ReturnsAllItems()
-        {
-            var response = await _testContext.Client.GetAsync("api/Items");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var itemsRetrieved = JsonSerializer.Deserialize<List<Items>>(jsonString);
-            Assert.NotNull(itemsRetrieved);
         }
 
         private Items GetDefaultItem(string name) => 

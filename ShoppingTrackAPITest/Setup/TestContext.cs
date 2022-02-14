@@ -167,7 +167,10 @@ namespace ShoppingTrackAPITest.Setup
             {
                 MatchName = $"{imageUri}:{tag}"
             });
-            return images.Any();
+
+            var image = images.Where(image => image.RepoTags != null && image.RepoTags.FirstOrDefault() == $"{imageUri}:{tag}");
+
+            return image.Any();
         }
 
         private async Task StartContainerAsync()
