@@ -48,8 +48,7 @@ namespace ShoppingTrackAPIUnitTest.Features.Stores
             await context.Stores.AddAsync(new ShoppingTrackAPI.Models.Stores
             {
                 StoreId = 1,
-                Name = "Kroger",
-                PictureFileName = String.Empty 
+                Name = "Kroger"
             }, CancellationToken.None);
 
             await context.SaveChangesAsync(CancellationToken.None);
