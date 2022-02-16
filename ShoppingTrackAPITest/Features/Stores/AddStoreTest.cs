@@ -54,8 +54,7 @@ namespace ShoppingTrackAPITest.Features.Stores
         private ShoppingTrackAPI.Models.Stores GetDefaultStore(string name) =>
             new ShoppingTrackAPI.Models.Stores()
             {
-                Name = name,
-                PictureFileName = string.Empty
+                Name = name
             };
     }
 }

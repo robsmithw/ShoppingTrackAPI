@@ -8,7 +8,5 @@ namespace ShoppingTrackAPI.Models
         public int StoreId { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonPropertyName("pictureFileName")]
-        public string PictureFileName { get; set; }
     }
 }
