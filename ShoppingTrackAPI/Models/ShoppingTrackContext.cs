@@ -46,112 +46,91 @@ namespace ShoppingTrackAPI.Models
                     .HasColumnName("Name")
                     .HasColumnType("varchar(256)");
 
-                entity.Property(e => e.PictureFileName)
-                    .HasColumnName("PictureFileName")
-                    .HasColumnType("varchar(50)");
-
                 entity.HasData(
                     new Stores
                     {
                         StoreId = 1,
-                        Name = "Kroger",
-                        PictureFileName = String.Empty 
+                        Name = "Kroger"
                     },
                     new Stores
                     {
                         StoreId = 2,
-                        Name = "Publix",
-                        PictureFileName = String.Empty
+                        Name = "Publix"
                     },
                     new Stores
                     {
                         StoreId = 3,
-                        Name = "Amazon",
-                        PictureFileName = String.Empty
+                        Name = "Amazon"
                     },
                     new Stores
                     {
                         StoreId = 4,
-                        Name = "Whole Foods",
-                        PictureFileName = String.Empty
+                        Name = "Whole Foods"
                     },
                     new Stores
                     {
                         StoreId = 5,
-                        Name = "Trader Joes",
-                        PictureFileName = String.Empty
+                        Name = "Trader Joes"
                     },
                     new Stores
                     {
                         StoreId = 6,
-                        Name = "Walmart",
-                        PictureFileName = String.Empty
+                        Name = "Walmart"
                     },
                     new Stores
                     {
                         StoreId = 7,
-                        Name = "Dollar General",
-                        PictureFileName = String.Empty
+                        Name = "Dollar General"
                     },
                     new Stores
                     {
                         StoreId = 8,
-                        Name = "Pick n Save",
-                        PictureFileName = String.Empty
+                        Name = "Pick n Save"
                     },
                     new Stores
                     {
                         StoreId = 9,
-                        Name = "Giant Eagle",
-                        PictureFileName = String.Empty
+                        Name = "Giant Eagle"
                     },
                     new Stores
                     {
                         StoreId = 10,
-                        Name = "Schnucks",
-                        PictureFileName = String.Empty
+                        Name = "Schnucks"
                     },
                     new Stores
                     {
                         StoreId = 11,
-                        Name = "H-E-B",
-                        PictureFileName = String.Empty
+                        Name = "H-E-B"
                     },
                     new Stores
                     {
                         StoreId = 12,
-                        Name = "Food Lion",
-                        PictureFileName = String.Empty
+                        Name = "Food Lion"
                     },
                     new Stores
                     {
                         StoreId = 13,
-                        Name = "Costco",
-                        PictureFileName = String.Empty
+                        Name = "Costco"
                     },
                     new Stores
                     {
                         StoreId = 14,
-                        Name = "Sams Club",
-                        PictureFileName = String.Empty
+                        Name = "Sams Club"
                     },
                     new Stores
                     {
                         StoreId = 15,
-                        Name = "ALDI",
-                        PictureFileName = String.Empty
+                        Name = "ALDI"
                     },
                     new Stores
                     {
                         StoreId = 16,
-                        Name = "Save A Lot",
-                        PictureFileName = String.Empty
+                        Name = "Save A Lot"
                     },
                     new Stores
                     {
                         StoreId = 17,
-                        Name = "Orbit Health",
-                        PictureFileName = String.Empty
+                        Name = "Orbit Health"
                     }
                 );
             });
