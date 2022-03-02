@@ -154,119 +154,119 @@ namespace ShoppingTrackAPI.Migrations
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0001"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(2197),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(4721),
                             IsDeleted = false,
                             Name = "Kroger"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0002"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(4855),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7291),
                             IsDeleted = false,
                             Name = "Publix"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0003"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(4942),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7374),
                             IsDeleted = false,
                             Name = "Amazon"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0004"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(4989),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7418),
                             IsDeleted = false,
                             Name = "Whole Foods"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0005"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5031),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7460),
                             IsDeleted = false,
                             Name = "Trader Joes"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0006"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5073),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7501),
                             IsDeleted = false,
                             Name = "Walmart"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0007"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5115),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7542),
                             IsDeleted = false,
                             Name = "Dollar General"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0008"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5157),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7585),
                             IsDeleted = false,
                             Name = "Pick n Save"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0009"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5201),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7626),
                             IsDeleted = false,
                             Name = "Giant Eagle"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0010"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5243),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7666),
                             IsDeleted = false,
                             Name = "Schnucks"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0011"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5284),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7706),
                             IsDeleted = false,
                             Name = "H-E-B"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0012"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5326),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7747),
                             IsDeleted = false,
                             Name = "Food Lion"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0013"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5368),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7787),
                             IsDeleted = false,
                             Name = "Costco"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0014"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5409),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7828),
                             IsDeleted = false,
                             Name = "Sams Club"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0015"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5451),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7868),
                             IsDeleted = false,
                             Name = "ALDI"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0016"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5492),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7908),
                             IsDeleted = false,
                             Name = "Save A Lot"
                         },
                         new
                         {
                             Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0017"),
-                            CreatedDate = new DateTime(2022, 2, 28, 0, 46, 41, 835, DateTimeKind.Utc).AddTicks(5534),
+                            CreatedDate = new DateTime(2022, 3, 2, 4, 9, 16, 117, DateTimeKind.Utc).AddTicks(7949),
                             IsDeleted = false,
                             Name = "Orbit Health"
                         });
