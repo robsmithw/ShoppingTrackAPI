@@ -28,6 +28,7 @@ namespace ShoppingTrackAPITest
         public AddItemTest(TestContext context)
         {
             _testContext = context;
+            _handler = new AddItem.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<AddItem>());
         }
 
         [Fact]
@@ -44,7 +45,7 @@ namespace ShoppingTrackAPITest
             Assert.NotNull(itemCreated);
             Assert.Equal(itemName, itemCreated.Name);
             // Ensure the itemId that is created
-            Assert.NotNull(itemCreated.Id);
+            Assert.True(itemCreated.Id != default);
             var itemFromDatabase = await _testContext.DbContext.Items.FirstOrDefaultAsync(i => i.Id == itemCreated.Id);
             Assert.NotNull(itemFromDatabase);
             Assert.Equal(itemCreated.Name, itemFromDatabase.Name);

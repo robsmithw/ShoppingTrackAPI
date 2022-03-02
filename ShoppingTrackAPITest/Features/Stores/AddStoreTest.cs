@@ -36,12 +36,12 @@ namespace ShoppingTrackAPITest.Features.Stores
             var response = await _handler.Handle(command, CancellationToken.None);
             
             // Assert
-            Assert.NotNull(response);
+            Assert.True(response != default);
             var storeCreated = await _testContext.DbContext.Stores
                 .FirstOrDefaultAsync(x => x.Name == storeToAdd.Name, CancellationToken.None);
             Assert.NotNull(storeCreated);
             Assert.Equal(storeName, storeCreated.Name);
-            Assert.NotNull(storeCreated.Id);
+            Assert.True(storeCreated.Id != default);
         }
 
         private ShoppingTrackAPI.Models.Store GetDefaultStore(string name) =>
