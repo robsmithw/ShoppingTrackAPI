@@ -1,20 +1,14 @@
-using System.Text.Json;
-using System.Text;
-using System.Net;
-using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 using Xunit;
 
 using Microsoft.EntityFrameworkCore;
-
-using ShoppingTrackAPI.Models;
-using ShoppingTrackAPITest.Setup;
-using ShoppingTrackAPI.Controllers;
-using static ShoppingTrackAPI.Controllers.AddStore;
 using Microsoft.Extensions.Logging;
-using System.Threading;
+
+using ShoppingTrackAPITest.Setup;
+using ShoppingTrackAPI.Features.Stores;
+using static ShoppingTrackAPI.Features.Stores.AddStore;
 
 namespace ShoppingTrackAPITest.Features.Stores
 {
@@ -31,7 +25,7 @@ namespace ShoppingTrackAPITest.Features.Stores
         }
 
         [Fact]
-        public async Task AddStoreWithoutStoreId_ReturnsCreatedStore()
+        public async Task AddStoreWithoutId_ReturnsCreatedStore()
         {
             // Arrange
             const string storeName = "testStore";
@@ -47,12 +41,11 @@ namespace ShoppingTrackAPITest.Features.Stores
                 .FirstOrDefaultAsync(x => x.Name == storeToAdd.Name, CancellationToken.None);
             Assert.NotNull(storeCreated);
             Assert.Equal(storeName, storeCreated.Name);
-            // Ensure the storeId that is created is greater than 0
-            Assert.InRange(storeCreated.StoreId, 1, int.MaxValue);
+            Assert.NotNull(storeCreated.Id);
         }
 
-        private ShoppingTrackAPI.Models.Stores GetDefaultStore(string name) =>
-            new ShoppingTrackAPI.Models.Stores()
+        private ShoppingTrackAPI.Models.Store GetDefaultStore(string name) =>
+            new ShoppingTrackAPI.Models.Store()
             {
                 Name = name
             };

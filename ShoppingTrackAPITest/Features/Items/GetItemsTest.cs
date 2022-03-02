@@ -2,7 +2,6 @@ using ShoppingTrackAPI.Models;
 using System.Text.Json;
 using System.Text;
 using System;
-using ShoppingTrackAPI.Controllers;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using System.Net;
@@ -13,6 +12,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using ShoppingTrackAPITest.Setup;
+using ShoppingTrackAPI.Features.Items;
+using System.Threading;
 
 namespace ShoppingTrackAPITest.Features.Items
 {
@@ -20,32 +21,39 @@ namespace ShoppingTrackAPITest.Features.Items
     public class GetItemsTest
     {
         private readonly TestContext _testContext;
-        //private readonly Handler _handler;
+        private readonly GetItems.Handler _handler;
 
         public GetItemsTest(TestContext context)
         {
             _testContext = context;
-            //_handler = new GetItems.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<AddStore>());
+            _handler = new GetItems.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<GetItems>());
         }
 
-        [Fact(Skip = "Get Items not converted to query yet.")]
-        public async Task GetItems_ReturnsAllItems()
+        [Fact]
+        public async Task GetItems_ReturnsAllNotDeletedItems()
         {
-            var response = await _testContext.Client.GetAsync("api/Items");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var itemsRetrieved = JsonSerializer.Deserialize<List<ShoppingTrackAPI.Models.Items>>(jsonString);
-            Assert.NotNull(itemsRetrieved);
+            var item = GetDefaultItem("Apples");
+            item.IsDeleted = false;
+            var deletedItem = GetDefaultItem("Meatballs");
+            item.IsDeleted = true;
+
+            await _testContext.DbContext.Items.AddRangeAsync(new List<Item>(){ item, deletedItem }, CancellationToken.None);
+            await _testContext.DbContext.SaveChangesAsync(CancellationToken.None);
+
+            var response = await _handler.Handle(new GetItems.Query(), CancellationToken.None);
+
+            Assert.NotNull(response);
+            Assert.InRange(response.Count, 1, int.MaxValue);
         }
 
-        private ShoppingTrackAPI.Models.Items GetDefaultItem(string name) => 
-            new ShoppingTrackAPI.Models.Items()
+        private Item GetDefaultItem(string name) => 
+            new Item()
             {
                 Name = name,
-                User_Id = 1,
-                Previous_Price = (decimal)1.98,
-                Last_Store_Id = 1,
-                CurrentStoreId = 1
+                UserId = Guid.NewGuid(),
+                PreviousPrice = (decimal)1.98,
+                LastStoreId = Guid.NewGuid(),
+                CurrentStoreId = Guid.NewGuid()
             };
     }
 }

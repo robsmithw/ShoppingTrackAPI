@@ -9,125 +9,76 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingTrackAPI.Models;
 using MediatR;
 using System.Threading;
+using ShoppingTrackAPI.HelperFunctions;
 
-namespace ShoppingTrackAPI.Controllers
+namespace ShoppingTrackAPI.Features.Stores
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class StoresController : ControllerBase
     {
-        private readonly ShoppingTrackContext _context;
         private readonly IMediator _mediator;
+        private readonly IHelper _helper;
 
-        public StoresController(ShoppingTrackContext context, IMediator mediator)
+        public StoresController(IMediator mediator, IHelper helper)
         {
-            _context = context;
             _mediator = mediator;
+            _helper = helper;
         }
 
         // GET: api/Stores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Stores>>> GetStores()
+        public async Task<ActionResult<IEnumerable<Store>>> GetStores()
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(3000);
-            var cancellationToken = cancellationTokenSource.Token;
-            var response = await _mediator.Send(new GetStores.Query(), cancellationToken);
-            return Ok(response);
+            var cancellationToken = _helper.GetCancellationToken(3000);
+            var stores = await _mediator.Send(new GetStores.Query(), cancellationToken);
+            return Ok(stores);
         }
 
         [HttpGet]
         [Route(nameof(GetStoresWithItemsByUser))]
-        public async Task<ActionResult<IEnumerable<Stores>>> GetStoresWithItemsByUser(int userId)
+        public async Task<ActionResult<IEnumerable<Store>>> GetStoresWithItemsByUser(Guid userId)
         {
-            List<Stores> stores = null;
-            var storesWithItemIds = await _context.Items.Where(x => x.User_Id == userId).Select(x => x.CurrentStoreId).Distinct().ToListAsync();
-            if (storesWithItemIds != null)
-            {
-                stores = await _context.Stores.Where(x => storesWithItemIds.Contains(x.StoreId)).ToListAsync();
-            }
-            return stores;
+            var cancellationToken = _helper.GetCancellationToken(3000);
+            var stores = await _mediator.Send(new GetStores.Query { UserId = userId }, cancellationToken);
+            return Ok(stores);
         }
 
         // GET: api/Stores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Stores>> GetStores(int id)
+        public async Task<ActionResult<Store>> GetStores(Guid id)
         {
-            var stores = await _context.Stores.FindAsync(id);
+            var cancellationToken = _helper.GetCancellationToken(3000);
+            var store = await _mediator.Send(new GetStore.Query(id), cancellationToken);
 
-            if (stores == null)
+            if (store == null)
             {
                 return NotFound();
             }
 
-            return stores;
-        }
-
-        // PUT: api/Stores/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStores(int id, Stores stores)
-        {
-            if (id != stores.StoreId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(stores).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StoresExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(store);
         }
 
         // POST: api/Stores
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Stores>> PostStores(Stores store)
+        public async Task<ActionResult<Store>> PostStores(Store store)
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(3000);
-            var cancellationToken = cancellationTokenSource.Token;
+            var cancellationToken = _helper.GetCancellationToken(3000);
             var response = await _mediator.Send(new AddStore.Command(store), cancellationToken);
             return Ok(response);
         }
 
         // DELETE: api/Stores/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Stores>> DeleteStores(int id)
+        public async Task<ActionResult<Store>> DeleteStores(Guid id)
         {
-            var stores = await _context.Stores.FindAsync(id);
-            if (stores == null)
-            {
-                return NotFound();
-            }
+            var cancellationToken = _helper.GetCancellationToken(3000);
+            var response = await _mediator.Send(new DeleteStore.Command(id), cancellationToken);
 
-            _context.Stores.Remove(stores);
-            await _context.SaveChangesAsync();
-
-            return stores;
-        }
-
-        private bool StoresExists(int id)
-        {
-            return _context.Stores.Any(e => e.StoreId == id);
+            return Ok();
         }
     }
 }

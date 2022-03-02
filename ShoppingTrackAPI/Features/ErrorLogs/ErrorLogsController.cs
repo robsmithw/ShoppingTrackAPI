@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingTrackAPI.Models;
 
-namespace ShoppingTrackAPI.Controllers
+namespace ShoppingTrackAPI.Features.ErrorLogs
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -30,7 +30,7 @@ namespace ShoppingTrackAPI.Controllers
 
         // GET: api/ErrorLogs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ErrorLog>> GetErrorLog(int id)
+        public async Task<ActionResult<ErrorLog>> GetErrorLog(Guid id)
         {
             var errorLog = await _context.ErrorLog.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace ShoppingTrackAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutErrorLog(int id, ErrorLog errorLog)
+        public async Task<IActionResult> PutErrorLog(Guid id, ErrorLog errorLog)
         {
             if (id != errorLog.Id)
             {
@@ -102,7 +102,7 @@ namespace ShoppingTrackAPI.Controllers
             return errorLog;
         }
 
-        private bool ErrorLogExists(int id)
+        private bool ErrorLogExists(Guid id)
         {
             return _context.ErrorLog.Any(e => e.Id == id);
         }

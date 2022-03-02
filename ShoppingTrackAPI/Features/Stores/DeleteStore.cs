@@ -1,30 +1,32 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.Features.Stores
 {
-    public class AddStore
+    public class DeleteStore
     {
         public class Command : IRequest<Unit> 
         {
-            public Command(Store store)
+            public Command(Guid id)
             {
-                Store = store;
+                StoreId = id;
             }
-            public Store Store { get; set; }
+            public Guid StoreId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Unit>
         {
             private readonly ShoppingTrackContext _context;
-            private readonly ILogger<AddStore> _logger;
+            private readonly ILogger<DeleteStore> _logger;
 
-            public Handler(ShoppingTrackContext context, ILogger<AddStore> logger)
+            public Handler(ShoppingTrackContext context, ILogger<DeleteStore> logger)
             {
                 _context = context;
                 _logger = logger;
@@ -32,8 +34,13 @@ namespace ShoppingTrackAPI.Features.Stores
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Stores.Add(request.Store);
-                await _context.SaveChangesAsync();
+                var store = await _context.Stores.FirstOrDefaultAsync(x => x.Id == request.StoreId, cancellationToken);
+                
+                if (store is not null)
+                {
+                    _context.Stores.Remove(store);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
 
                 return Unit.Value;
             }

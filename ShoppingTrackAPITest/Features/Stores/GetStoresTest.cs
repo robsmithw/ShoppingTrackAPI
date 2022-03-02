@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using ShoppingTrackAPITest.Setup;
-using ShoppingTrackAPI.Controllers;
-using static ShoppingTrackAPI.Controllers.GetStores;
+using ShoppingTrackAPI.Features.Stores;
 
 namespace ShoppingTrackAPITest.Features.Stores
 {
@@ -16,7 +15,7 @@ namespace ShoppingTrackAPITest.Features.Stores
     public class GetStoresTest
     {
         private readonly TestContext _testContext;
-        private readonly Handler _handler;
+        private readonly GetStores.Handler _handler;
 
         public GetStoresTest(TestContext context)
         {
