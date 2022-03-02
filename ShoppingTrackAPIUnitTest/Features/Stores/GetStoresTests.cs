@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ShoppingTrackAPIUnitTest.Setup;
-using ShoppingTrackAPI.Controllers;
+using ShoppingTrackAPI.Features.Stores;
 using ShoppingTrackAPI.Models;
 
 using Xunit;
@@ -28,7 +28,7 @@ namespace ShoppingTrackAPIUnitTest.Features.Stores
             var handler = mocker.CreateInstance<GetStores.Handler>();
 
             // Act
-            List<ShoppingTrackAPI.Models.Stores> result = await handler.Handle(new GetStores.Query(), CancellationToken.None);
+            List<ShoppingTrackAPI.Models.Store> result = await handler.Handle(new GetStores.Query(), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
@@ -45,16 +45,16 @@ namespace ShoppingTrackAPIUnitTest.Features.Stores
 
             var handler = mocker.CreateInstance<GetStores.Handler>();
 
-            await context.Stores.AddAsync(new ShoppingTrackAPI.Models.Stores
+            await context.Stores.AddAsync(new ShoppingTrackAPI.Models.Store
             {
-                StoreId = 1,
+                Id = Guid.NewGuid(),
                 Name = "Kroger"
             }, CancellationToken.None);
 
             await context.SaveChangesAsync(CancellationToken.None);
 
             // Act
-            List<ShoppingTrackAPI.Models.Stores> result = await handler.Handle(new GetStores.Query(), CancellationToken.None);
+            List<ShoppingTrackAPI.Models.Store> result = await handler.Handle(new GetStores.Query(), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
