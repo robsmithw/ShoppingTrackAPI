@@ -13,10 +13,11 @@ namespace ShoppingTrackAPI.Models
         {
         }
 
-        public virtual DbSet<Stores> Stores { get; set; }
+        public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
-        public virtual DbSet<Items> Items { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Price> Prices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,130 +35,115 @@ namespace ShoppingTrackAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Stores>(entity =>
+            modelBuilder.Entity<Store>(entity =>
             {
-                entity.HasKey(e => e.StoreId);
-
-                entity.Property(e => e.StoreId)
-                    .HasColumnName("StoreId")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.Name)
                     .HasColumnName("Name")
                     .HasColumnType("varchar(256)");
 
                 entity.HasData(
-                    new Stores
+                    new Store
                     {
-                        StoreId = 1,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0001"),
                         Name = "Kroger"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 2,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0002"),
                         Name = "Publix"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 3,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0003"),
                         Name = "Amazon"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 4,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0004"),
                         Name = "Whole Foods"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 5,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0005"),
                         Name = "Trader Joes"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 6,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0006"),
                         Name = "Walmart"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 7,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0007"),
                         Name = "Dollar General"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 8,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0008"),
                         Name = "Pick n Save"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 9,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0009"),
                         Name = "Giant Eagle"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 10,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0010"),
                         Name = "Schnucks"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 11,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0011"),
                         Name = "H-E-B"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 12,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0012"),
                         Name = "Food Lion"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 13,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0013"),
                         Name = "Costco"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 14,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0014"),
                         Name = "Sams Club"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 15,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0015"),
                         Name = "ALDI"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 16,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0016"),
                         Name = "Save A Lot"
                     },
-                    new Stores
+                    new Store
                     {
-                        StoreId = 17,
+                        Id = new Guid("f19b1ffb-cfc1-40cf-9b71-5a9b702e0017"),
                         Name = "Orbit Health"
                     }
                 );
             });
 
-            modelBuilder.Entity<Prices>(entity =>
+            modelBuilder.Entity<Price>(entity =>
             {
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("Id")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.ItemId)
-                    .HasColumnName("ItemId")
-                    .HasColumnType("int(11)");
+                    .HasColumnName("ItemId");
 
                 entity.Property(e => e.UserId)
-                    .HasColumnName("UserId")
-                    .HasColumnType("int(11)");
+                    .HasColumnName("UserId");
 
-                entity.Property(e => e.Price)
+                entity.Property(e => e.CurrentPrice)
                     .HasColumnName("Price")
                     .HasColumnType("decimal(10,2)");
 
                 entity.Property(e => e.StoreId)
-                    .HasColumnName("StoreId")
-                    .HasColumnType("int(11)");
+                    .HasColumnName("StoreId");
 
                 entity.Property(e => e.DateOfPrice)
                     .HasColumnName("DateOfPrice")
@@ -166,10 +152,6 @@ namespace ShoppingTrackAPI.Models
 
             modelBuilder.Entity<ErrorLog>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.CallStack)
                     .IsRequired()
                     .HasColumnName("call_stack")
@@ -181,40 +163,25 @@ namespace ShoppingTrackAPI.Models
                     .HasColumnType("varchar(250)");
             });
 
-            modelBuilder.Entity<Items>(entity =>
+            modelBuilder.Entity<Item>(entity =>
             {
-                entity.HasKey(e => e.ItemId)
-                    .HasName("PRIMARY");
-
-                entity.Property(e => e.ItemId)
-                    .HasColumnName("item_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Last_Store_Id)
-                    .HasColumnName("last_store_id")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.LastStoreId)
+                    .HasColumnName("last_store_id");
 
                 entity.Property(e => e.CurrentStoreId)
-                    .HasColumnName("currentStoreId")
-                    .HasColumnType("int(11)");
+                    .HasColumnName("currentStoreId");
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasColumnType("varchar(250)");
 
-                entity.Property(e => e.Previous_Price)
+                entity.Property(e => e.PreviousPrice)
                     .HasColumnName("previous_price")
                     .HasColumnType("decimal(10,2)");
 
-                entity.Property(e => e.User_Id)
+                entity.Property(e => e.UserId)
                     .IsRequired()
-                    .HasColumnName("user_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Deleted)
-                    .IsRequired()
-                    .HasColumnName("deleted")
-                    .HasColumnType("bit(1)");
+                    .HasColumnName("user_id");
 
                 entity.Property(e => e.Purchased)
                     .IsRequired()
@@ -224,24 +191,14 @@ namespace ShoppingTrackAPI.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.User_Id)
-                    .HasName("PRIMARY");
 
                 entity.Property(e => e.Username)
                     .HasColumnName("username")
                     .HasColumnType("varchar(16)");
 
-                entity.Property(e => e.User_Id)
-                    .HasColumnName("user_id")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
                     .HasColumnType("varchar(256)");
-
-                entity.Property(e => e.Password)
-                    .HasColumnName("password")
-                    .HasColumnType("char(128)");
 
                 entity.Property(e => e.Admin)
                     .HasColumnName("admin")
@@ -256,7 +213,5 @@ namespace ShoppingTrackAPI.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<ShoppingTrackAPI.Models.Prices> Prices { get; set; }
     }
 }

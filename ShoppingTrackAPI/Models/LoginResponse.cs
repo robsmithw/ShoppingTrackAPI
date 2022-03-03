@@ -1,10 +1,10 @@
-using System.Text.Json.Serialization;
+using System;
 
 namespace ShoppingTrackAPI.Models
 {
     public class LoginResponse
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string AccessToken { get; set; }
     }
 }
