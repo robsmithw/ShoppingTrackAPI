@@ -36,6 +36,7 @@ namespace ShoppingTrackAPITest.Features.Stores
             var response = await _handler.Handle(command, CancellationToken.None);
             
             // Assert
+            #pragma warning disable xUnit2002
             Assert.NotNull(response);
             var storeCreated = await _testContext.DbContext.Stores
                 .FirstOrDefaultAsync(x => x.Name == storeToAdd.Name, CancellationToken.None);
