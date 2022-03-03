@@ -58,6 +58,8 @@ namespace ShoppingTrackAPI.Features.Items
                 //item doesnt exist for user
                 if (item == null)
                 {
+                    Console.WriteLine(requestedItem.Id);
+                    if (requestedItem.Id == default) requestedItem.Id = Guid.NewGuid();
                     await _context.Items.AddAsync(requestedItem, cancellationToken);
                     await _context.SaveChangesAsync(cancellationToken);
                 }
@@ -79,7 +81,7 @@ namespace ShoppingTrackAPI.Features.Items
                 }
                 resultDto.Error = string.Empty;
                 resultDto.Successful = true;
-                resultDto.Item = item;
+                resultDto.Item = item ?? requestedItem;
 
                 return resultDto;
             }

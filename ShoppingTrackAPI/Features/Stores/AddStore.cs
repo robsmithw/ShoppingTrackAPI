@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,8 +33,9 @@ namespace ShoppingTrackAPI.Features.Stores
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Stores.Add(request.Store);
-                await _context.SaveChangesAsync();
+                if (request.Store.Id == default) request.Store.Id = Guid.NewGuid();
+                await _context.Stores.AddAsync(request.Store, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return Unit.Value;
             }
