@@ -1,12 +1,12 @@
 using System;
+using System.Threading;
 using ShoppingTrackAPI.Models;
 
 namespace ShoppingTrackAPI.HelperFunctions
 {
     public interface IHelper
     {
-        public bool SignIn(User userInDatabase, User userSupplied);
-        public string CalculateHash(string toHash);
-        public void AddErrorToLog(ShoppingTrackContext _db, Exception  error);
+        CancellationToken GetCancellationToken(int cancelAfterMs);
+        void AddErrorToLog(ShoppingTrackContext context, Exception error);
     }
 }

@@ -21,8 +21,8 @@ services:
   api:
     build:
       context: .
-      args:
-        ASP_ENV: dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
     depends_on:
       db:
         condition: service_healthy
@@ -30,3 +30,6 @@ services:
       - 80:80
     links:
       - db
+    volumes:
+      - ~/.aws/credentials:/root/.aws/credentials:ro
+      - ~/.aws/config:/root/.aws/config:ro
