@@ -58,7 +58,6 @@ namespace ShoppingTrackAPI.Features.Items
                 //item doesnt exist for user
                 if (item == null)
                 {
-                    Console.WriteLine(requestedItem.Id);
                     if (requestedItem.Id == default) requestedItem.Id = Guid.NewGuid();
                     await _context.Items.AddAsync(requestedItem, cancellationToken);
                     await _context.SaveChangesAsync(cancellationToken);

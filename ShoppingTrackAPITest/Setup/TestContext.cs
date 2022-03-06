@@ -17,6 +17,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Version = System.Version;
 using ShoppingTrackAPI.Models;
 using ShoppingTrackAPI;
+using MediatR;
 
 namespace ShoppingTrackAPITest.Setup
 {
@@ -27,6 +28,7 @@ namespace ShoppingTrackAPITest.Setup
         private TestServer _server;
         public HttpClient Client { get; set; }
         public ShoppingTrackContext DbContext { get; set; }
+        public IMediator Mediator { get; set; }
         private const string ContainerImageUri = "mysql";
         private const string ContainerImageTag = "5.7";
         private const string ConnectionString
@@ -80,6 +82,7 @@ namespace ShoppingTrackAPITest.Setup
                 BaseAddress = new Uri("http://localhost:8000")
             };
             Client = _server.CreateClient();
+            Mediator = _server.Services.GetService<IMediator>();
         }
 
         private async Task CleanContainersAsync()
