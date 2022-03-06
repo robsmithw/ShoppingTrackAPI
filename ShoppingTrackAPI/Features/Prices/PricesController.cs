@@ -19,10 +19,10 @@ namespace ShoppingTrackAPI.Features.Prices
     public class PricesController : ControllerBase
     {
         private readonly ShoppingTrackContext _context;
-        private readonly Mediator _mediator;
+        private readonly IMediator _mediator;
         private readonly IHelper _helper;
 
-        public PricesController(ShoppingTrackContext context, Mediator mediator, IHelper helper)
+        public PricesController(ShoppingTrackContext context, IMediator mediator, IHelper helper)
         {
             _context = context;
             _mediator = mediator;

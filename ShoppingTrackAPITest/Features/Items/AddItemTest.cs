@@ -1,19 +1,14 @@
-using ShoppingTrackAPI.Models;
-using System.Text.Json;
-using System.Text;
 using System;
-using Microsoft.Extensions.Logging;
-using Xunit;
-using System.Net;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Threading;
+
+using Microsoft.EntityFrameworkCore;
+
+using Xunit;
+
+using ShoppingTrackAPI.Models;
 using ShoppingTrackAPITest.Setup;
 using ShoppingTrackAPI.Features.Items;
-using System.Threading;
 
 namespace ShoppingTrackAPITest
 {
@@ -21,14 +16,12 @@ namespace ShoppingTrackAPITest
     public class AddItemTest
     {
         private readonly TestContext _testContext;
-        private readonly AddItem.Handler _handler;
         private readonly CancellationToken _cancellationToken = CancellationToken.None;
         private readonly string _itemExistErrorMessage = "The item already exist for this user and cannot be added twice.";
 
         public AddItemTest(TestContext context)
         {
             _testContext = context;
-            _handler = new AddItem.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<AddItem>());
         }
 
         [Fact]
@@ -37,7 +30,7 @@ namespace ShoppingTrackAPITest
             const string itemName = "testItem";
             var itemToAdd = GetDefaultItem(itemName);
 
-            var response = await _handler.Handle(new AddItem.Command(itemToAdd), CancellationToken.None);
+            var response = await _testContext.Mediator.Send(new AddItem.Command(itemToAdd), _cancellationToken);
             
             Assert.NotNull(response);
             Assert.True(response.Successful);
@@ -60,7 +53,7 @@ namespace ShoppingTrackAPITest
             itemToAdd.Id = Guid.NewGuid();
             
             //act
-            var response = await _handler.Handle(new AddItem.Command(itemToAdd), CancellationToken.None);
+            var response = await _testContext.Mediator.Send(new AddItem.Command(itemToAdd), _cancellationToken);
             
             //assert
             Assert.NotNull(response);
@@ -82,7 +75,7 @@ namespace ShoppingTrackAPITest
             await _testContext.DbContext.SaveChangesAsync(_cancellationToken);
 
             //Act
-            var response = await _handler.Handle(new AddItem.Command(itemToAdd), CancellationToken.None);
+            var response = await _testContext.Mediator.Send(new AddItem.Command(itemToAdd), _cancellationToken);
 
             //Assert
             Assert.NotNull(response);
@@ -107,7 +100,7 @@ namespace ShoppingTrackAPITest
             await _testContext.DbContext.SaveChangesAsync(_cancellationToken);
             
             //Act
-            var response = await _handler.Handle(new AddItem.Command(itemToAdd), CancellationToken.None);
+            var response = await _testContext.Mediator.Send(new AddItem.Command(itemToAdd), _cancellationToken);
 
             //Assert
             Assert.NotNull(response);

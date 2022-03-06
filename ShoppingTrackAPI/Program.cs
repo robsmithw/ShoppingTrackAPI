@@ -33,7 +33,6 @@ namespace ShoppingTrackAPI
                 //.UseEnvironment(environmentName)
                 .ConfigureAppConfiguration((context, config) =>
                 {
-                    Console.WriteLine("Environment: {0}", context.HostingEnvironment.EnvironmentName);
                     config.AddSystemsManager($"/shopping-track-api/{context.HostingEnvironment.EnvironmentName}/",
                         reloadAfter: TimeSpan.FromMinutes(20));
                 })

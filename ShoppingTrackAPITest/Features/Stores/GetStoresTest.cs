@@ -15,12 +15,11 @@ namespace ShoppingTrackAPITest.Features.Stores
     public class GetStoresTest
     {
         private readonly TestContext _testContext;
-        private readonly GetStores.Handler _handler;
+        private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
         public GetStoresTest(TestContext context)
         {
             _testContext = context;
-            _handler = new GetStores.Handler(_testContext.DbContext, new LoggerFactory().CreateLogger<GetStores>());
         }
 
         [Fact]
@@ -29,10 +28,10 @@ namespace ShoppingTrackAPITest.Features.Stores
             // Arrange
             var query = new GetStores.Query();
 
-            //Act
-            var response = await _handler.Handle(query, CancellationToken.None);
+            // Act
+            var response = await _testContext.Mediator.Send(query, _cancellationToken);
             
-            //Assert
+            // Assert
             Assert.NotNull(response);
             Assert.InRange(response.Count, 17, int.MaxValue);
         }
